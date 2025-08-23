@@ -5,6 +5,8 @@ use tokio::sync::Mutex;
 use screenshots::Screen;
 use base64::{Engine as _, engine::general_purpose};
 use arboard::Clipboard;
+use std::fs;
+use std::path::PathBuf;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Config {
@@ -55,11 +57,57 @@ impl AppState {
             .build()
             .expect("Failed to create HTTP client");
 
+        // Load config from file or use default
+        let config = Self::load_config().unwrap_or_else(|e| {
+            println!("Failed to load config: {}, using default", e);
+            Config::default()
+        });
+
         Self {
-            config: Arc::new(Mutex::new(Config::default())),
+            config: Arc::new(Mutex::new(config)),
             current_hotkey: Arc::new(Mutex::new(None)),
             http_client,
         }
+    }
+
+    fn get_config_path() -> Result<PathBuf, String> {
+        let home_dir = dirs_next::home_dir().ok_or("Failed to get home directory")?;
+        let config_dir = home_dir.join(".mathimage");
+        
+        // Create config directory if it doesn't exist
+        fs::create_dir_all(&config_dir)
+            .map_err(|e| format!("Failed to create config directory: {}", e))?;
+        
+        Ok(config_dir.join("config.json"))
+    }
+
+    fn load_config() -> Result<Config, String> {
+        let config_path = Self::get_config_path()?;
+        
+        if !config_path.exists() {
+            return Ok(Config::default());
+        }
+
+        let config_data = fs::read_to_string(&config_path)
+            .map_err(|e| format!("Failed to read config file: {}", e))?;
+        
+        let config: Config = serde_json::from_str(&config_data)
+            .map_err(|e| format!("Failed to parse config file: {}", e))?;
+        
+        Ok(config)
+    }
+
+    fn save_config(config: &Config) -> Result<(), String> {
+        let config_path = Self::get_config_path()?;
+        
+        let config_data = serde_json::to_string_pretty(config)
+            .map_err(|e| format!("Failed to serialize config: {}", e))?;
+        
+        fs::write(&config_path, config_data)
+            .map_err(|e| format!("Failed to write config file: {}", e))?;
+        
+        println!("Config saved to: {:?}", config_path);
+        Ok(())
     }
 }
 
@@ -88,6 +136,10 @@ async fn get_config(state: State<'_, AppState>) -> Result<Config, String> {
 
 #[tauri::command]
 async fn update_config(state: State<'_, AppState>, new_config: Config) -> Result<(), String> {
+    // Save to file first
+    AppState::save_config(&new_config)?;
+    
+    // Then update in-memory config
     let mut config = state.config.lock().await;
     *config = new_config;
     Ok(())
@@ -575,13 +627,20 @@ fn format_hotkey_for_display(hotkey: &str) -> String {
 }
 
 
-fn create_system_tray() -> SystemTray {
+fn create_system_tray(config: &Config) -> SystemTray {
     let model_submenu = SystemTrayMenu::new()
         .add_item(CustomMenuItem::new("model_loading".to_string(), "Loading models..."));
 
-    let model_item = SystemTraySubmenu::new("Model: Not Selected", model_submenu);
-    let hotkey_item = CustomMenuItem::new("hotkey".to_string(), "Hotkey: Cmd+Shift+M");
-    let sound_item = CustomMenuItem::new("toggle_sound".to_string(), "Sound: Enabled");
+    let model_display = if config.model.is_empty() { "Not Selected" } else { &config.model };
+    let model_item = SystemTraySubmenu::new(&format!("Model: {}", model_display), model_submenu);
+    
+    // Format hotkey for display
+    let formatted_hotkey = format_hotkey_for_display(&config.hotkey);
+    let hotkey_item = CustomMenuItem::new("hotkey".to_string(), &format!("Hotkey: {}", formatted_hotkey));
+    
+    let sound_text = if config.sound_enabled { "Enabled" } else { "Disabled" };
+    let sound_item = CustomMenuItem::new("toggle_sound".to_string(), &format!("Sound: {}", sound_text));
+    
     let settings_item = CustomMenuItem::new("settings".to_string(), "Settings");
     let quit_item = CustomMenuItem::new("quit".to_string(), "Quit");
 
@@ -899,10 +958,16 @@ async fn update_hotkey(app_handle: tauri::AppHandle, new_hotkey: String, state: 
 #[tokio::main]
 async fn main() {
     let app_state = AppState::new();
+    
+    // Get initial config for system tray
+    let initial_config = {
+        let config = app_state.config.lock().await;
+        config.clone()
+    };
 
     tauri::Builder::default()
         .manage(app_state)
-        .system_tray(create_system_tray())
+        .system_tray(create_system_tray(&initial_config))
         .on_system_tray_event(|app, event| match event {
             SystemTrayEvent::MenuItemClick { id, .. } => {
                 match id.as_str() {
