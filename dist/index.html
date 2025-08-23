@@ -1,0 +1,1160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MathImage Settings</title>
+    <style>
+        * { box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: #f5f5f7;
+            min-height: 100vh;
+            color: #1d1d1f;
+        }
+        .container {
+            max-width: 500px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            overflow: hidden;
+            min-height: 700px;
+        }
+        .header {
+            background: white;
+            color: #1d1d1f;
+            padding: 30px;
+            text-align: center;
+            border-bottom: 1px solid #d2d2d7;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 32px;
+            font-weight: 600;
+            letter-spacing: -0.5px;
+        }
+        .content {
+            padding: 30px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #1d1d1f;
+            font-size: 14px;
+        }
+        input, textarea {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid #d2d2d7;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.2s ease;
+            background: white;
+        }
+        
+        /* 自定义苹果风格下拉选择器 */
+        .custom-select {
+            position: relative;
+            width: 100%;
+        }
+
+        .custom-select-trigger {
+            width: 100%;
+            padding: 12px 16px;
+            font-size: 14px;
+            font-weight: 400;
+            cursor: pointer;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            background-color: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(20px);
+            color: #1d1d1f;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.2s ease;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            user-select: none;
+        }
+
+        .custom-select-trigger:hover {
+            border-color: rgba(0, 0, 0, 0.2);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        .custom-select-trigger.active {
+            border-color: #007aff;
+            box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.2);
+        }
+
+        .custom-select-arrow {
+            width: 16px;
+            height: 16px;
+            transition: transform 0.2s ease;
+            opacity: 0.6;
+        }
+
+        .custom-select-trigger.active .custom-select-arrow {
+            transform: rotate(180deg);
+        }
+
+        .custom-select-options {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+            z-index: 1000;
+            margin-top: 4px;
+            max-height: 200px;
+            overflow-y: auto;
+            opacity: 0;
+            transform: translateY(-10px);
+            visibility: hidden;
+            transition: all 0.2s ease;
+        }
+
+        .custom-select-options.show {
+            opacity: 1;
+            transform: translateY(0);
+            visibility: visible;
+        }
+
+        .custom-select-option {
+            padding: 12px 16px;
+            font-size: 14px;
+            color: #1d1d1f;
+            cursor: pointer;
+            transition: background-color 0.15s ease;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .custom-select-option:last-child {
+            border-bottom: none;
+        }
+
+        .custom-select-option:hover {
+            background-color: rgba(0, 122, 255, 0.1);
+        }
+
+        .custom-select-option.selected {
+            background-color: rgba(0, 122, 255, 0.15);
+            color: #007aff;
+            font-weight: 500;
+        }
+
+        /* 隐藏原生select */
+        select#model {
+            display: none;
+        }
+        
+        select option:hover {
+            background-color: #f5f5f5;
+        }
+        
+        select:focus {
+            outline: 2px solid #007aff;
+            outline-offset: 2px;
+        }
+        
+        input:focus, textarea:focus {
+            outline: none;
+            border-color: #007aff;
+            box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.1);
+        }
+        
+        /* 复选框样式改进 */
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .checkbox-group input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            margin: 0;
+            cursor: pointer;
+        }
+        
+        .checkbox-group label {
+            margin: 0;
+            cursor: pointer;
+            user-select: none;
+        }
+        
+        /* 热键输入样式 */
+        .hotkey-input {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+        
+        .hotkey-display {
+            flex: 1;
+            padding: 12px 16px;
+            border: 1px solid #d2d2d7;
+            border-radius: 8px;
+            background: #f8f9fa;
+            font-family: monospace;
+            font-weight: bold;
+            color: #333;
+        }
+        
+        .hotkey-capture {
+            background: #007aff;
+            color: white;
+            border: none;
+            padding: 12px 16px;
+            border-radius: 8px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: opacity 0.2s ease;
+            height: 44px;
+            min-width: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .hotkey-capture:hover {
+            opacity: 0.8;
+        }
+        .button-group {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        button {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: opacity 0.2s ease;
+            flex: 1;
+            min-width: 120px;
+        }
+        .btn-primary {
+            background: #007aff;
+            color: white;
+        }
+        .btn-primary:hover {
+            opacity: 0.8;
+        }
+        .btn-secondary {
+            background: #8e8e93;
+            color: white;
+        }
+        .btn-secondary:hover {
+            opacity: 0.8;
+        }
+        .btn-success {
+            background: #34c759;
+            color: white;
+        }
+        .btn-success:hover {
+            opacity: 0.8;
+        }
+        .status {
+            margin-top: 15px;
+            padding: 12px;
+            border-radius: 8px;
+            font-weight: 500;
+        }
+        .success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>MathImage Settings</h1>
+        </div>
+
+        <div class="content">
+            <form id="settingsForm">
+                <div class="form-group">
+                    <label for="apiBaseUrl">API Base URL:</label>
+                    <input type="text" id="apiBaseUrl" placeholder="http://210.126.8.197:11434/v1" onchange="autoSaveSettings()" />
+                </div>
+
+                <div class="form-group">
+                    <label for="apiKey">API Key:</label>
+                    <input type="password" id="apiKey" placeholder="sk-..." onchange="autoSaveSettings()" />
+                </div>
+
+                <div class="form-group">
+                    <label for="model">Model:</label>
+                    <select id="model" onchange="autoSaveSettings()">
+                        <option value="">Select a model...</option>
+                    </select>
+                    <div class="custom-select" id="customModelSelect">
+                        <div class="custom-select-trigger" id="customSelectTrigger">
+                            <span id="customSelectText">Select a model...</span>
+                            <svg class="custom-select-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="6,9 12,15 18,9"></polyline>
+                            </svg>
+                        </div>
+                        <div class="custom-select-options" id="customSelectOptions">
+                            <!-- Options will be populated by JavaScript -->
+                        </div>
+                    </div>
+                    <div class="button-group" style="margin-top: 10px;">
+                        <button type="button" class="btn-success" onclick="loadModels()">Load Models</button>
+                        <button type="button" class="btn-primary" onclick="takeInteractiveScreenshot()">Screenshot & Analyze</button>
+                    </div>
+                    <div style="margin-top: 10px; font-size: 12px; color: #666;">
+                        Click button or press <strong><span id="hotkeyDisplay">Cmd+Shift+M</span></strong> to select region with mouse
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="prompt">Prompt:</label>
+                    <textarea id="prompt" rows="3" placeholder="Describe what you see in this image..." onchange="autoSaveSettings()"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="hotkey">Hotkey:</label>
+                    <div class="hotkey-input">
+                        <div class="hotkey-display" id="hotkeyDisplay2">Cmd+Shift+M</div>
+                        <button type="button" class="hotkey-capture" onclick="captureHotkey()">Change</button>
+                    </div>
+                    <div style="margin-top: 8px; font-size: 12px; color: #666;">
+                        Click "Change" and press the desired key combination. Press ESC to cancel.<br>
+                        <span style="color: #888; font-size: 11px;">Note: Some combinations like Cmd+Shift+A/S may be reserved by the system.</span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="soundEnabled" onchange="autoSaveSettings()" />
+                        <label for="soundEnabled">Enable sound notification after analysis</label>
+                    </div>
+                </div>
+
+                <div class="button-group">
+                    <button type="submit" class="btn-primary">Save Settings</button>
+                    <button type="button" class="btn-secondary" onclick="loadSettings()">Load Settings</button>
+                </div>
+            </form>
+
+            <div id="status" class="status" style="display: none;"></div>
+        </div>
+    </div>
+
+    <script type="module">
+        // Import Tauri API
+        import { invoke } from 'https://unpkg.com/@tauri-apps/api@1/tauri';
+
+        // Make invoke available globally
+        window.tauriInvoke = invoke;
+    </script>
+    <script>
+        let isCapturingHotkey = false;
+        let currentHotkey = "cmd+shift+m";
+
+        function captureHotkey() {
+            const captureBtn = document.querySelector('.hotkey-capture');
+            const display = document.getElementById('hotkeyDisplay2');
+            
+            if (isCapturingHotkey) return;
+            
+            isCapturingHotkey = true;
+            captureBtn.textContent = 'Press keys...';
+            captureBtn.style.background = '#ff3b30';
+            display.textContent = 'Press your desired key combination...';
+            display.style.background = '#fff3cd';
+            display.style.border = '1px solid #ffeaa7';
+            
+            // 清理之前的状态
+            pressedKeys.clear();
+            lastKeyEvent = null;
+            modifierKeysPressedCount = 0;
+            
+            // 使用更高优先级的事件捕获
+            document.addEventListener('keydown', handleHotkeyCapture, true);
+            document.addEventListener('keyup', handleHotkeyRelease, true);
+            
+            // 检测系统快捷键冲突的超时机制
+            setTimeout(() => {
+                if (isCapturingHotkey && modifierKeysPressedCount > 0 && pressedKeys.size === modifierKeysPressedCount) {
+                    display.textContent = 'System shortcut detected. Try a different combination or press ESC to cancel.';
+                    display.style.background = '#ffe6e6';
+                    display.style.border = '1px solid #ffaaaa';
+                }
+            }, 1500);
+        }
+
+        let pressedKeys = new Set();
+        let lastKeyEvent = null;
+        let captureTimeout = null;
+        let modifierKeysPressedCount = 0;
+
+        function handleHotkeyCapture(event) {
+            // 添加调试信息
+            console.log('KeyDown - Key pressed:', event.key, 'code:', event.code, 'metaKey:', event.metaKey, 'shiftKey:', event.shiftKey, 'ctrlKey:', event.ctrlKey, 'altKey:', event.altKey);
+            
+            // 强制阻止默认行为和冒泡
+            event.preventDefault();
+            event.stopPropagation();
+            event.stopImmediatePropagation();
+            
+            // Check for ESC key to cancel
+            if (event.key === 'Escape') {
+                finishHotkeyCapture();
+                return;
+            }
+            
+            // 记录按下的键
+            const wasNewKey = !pressedKeys.has(event.key);
+            pressedKeys.add(event.key);
+            lastKeyEvent = event;
+            
+            // 计算修饰键数量
+            if (wasNewKey && ['Meta', 'Control', 'Alt', 'Shift'].includes(event.key)) {
+                modifierKeysPressedCount++;
+            }
+            
+            // 清除之前的超时
+            if (captureTimeout) {
+                clearTimeout(captureTimeout);
+            }
+            
+            // 如果检测到非修饰键，设置短暂延迟后完成录制
+            if (!['Meta', 'Control', 'Alt', 'Shift'].includes(event.key)) {
+                console.log('Non-modifier key detected:', event.key);
+                captureTimeout = setTimeout(() => {
+                    completeHotkeyCapture(event);
+                }, 100); // 100ms 延迟确保所有修饰键状态稳定
+                return;
+            }
+            
+            // 实时更新显示
+            updateHotkeyDisplay();
+        }
+
+        function handleHotkeyRelease(event) {
+            console.log('KeyUp - Key released:', event.key, 'code:', event.code);
+            
+            // 强制阻止默认行为
+            event.preventDefault();
+            event.stopPropagation();
+            event.stopImmediatePropagation();
+            
+            // 如果是修饰键被释放，不做处理
+            if (['Meta', 'Control', 'Alt', 'Shift'].includes(event.key)) {
+                console.log('KeyUp - Modifier released:', event.key);
+                return;
+            }
+            
+            console.log('KeyUp - Non-modifier released:', event.key);
+            
+            // 清除超时（如果存在）
+            if (captureTimeout) {
+                clearTimeout(captureTimeout);
+                captureTimeout = null;
+            }
+            
+            // 非修饰键被释放，完成录制
+            if (lastKeyEvent) {
+                completeHotkeyCapture(lastKeyEvent);
+            }
+        }
+
+        function updateHotkeyDisplay() {
+            if (!lastKeyEvent) return;
+            
+            const keys = [];
+            if (lastKeyEvent.metaKey) keys.push('cmd');
+            if (lastKeyEvent.ctrlKey) keys.push('ctrl');
+            if (lastKeyEvent.altKey) keys.push('alt');
+            if (lastKeyEvent.shiftKey) keys.push('shift');
+            
+            // 添加非修饰键
+            const nonModifiers = Array.from(pressedKeys).filter(key => 
+                !['Meta', 'Control', 'Alt', 'Shift', 'Escape'].includes(key)
+            );
+            
+            if (nonModifiers.length > 0) {
+                keys.push(nonModifiers[nonModifiers.length - 1].toLowerCase()); // 使用最后按下的非修饰键
+            }
+            
+            const display = document.getElementById('hotkeyDisplay2');
+            if (keys.length > 0) {
+                display.textContent = formatHotkey(keys.join('+'));
+            }
+        }
+
+        function completeHotkeyCapture(event) {
+            const keys = [];
+            if (event.metaKey) keys.push('cmd');
+            if (event.ctrlKey) keys.push('ctrl');
+            if (event.altKey) keys.push('alt');
+            if (event.shiftKey) keys.push('shift');
+            
+            // 添加非修饰键
+            const nonModifiers = Array.from(pressedKeys).filter(key => 
+                !['Meta', 'Control', 'Alt', 'Shift', 'Escape'].includes(key)
+            );
+            
+            if (nonModifiers.length > 0) {
+                let keyName = nonModifiers[nonModifiers.length - 1].toLowerCase();
+                
+                // 特殊按键映射
+                const keyMap = {
+                    ' ': 'space',
+                    'enter': 'return',
+                    'arrowup': 'up',
+                    'arrowdown': 'down',
+                    'arrowleft': 'left',
+                    'arrowright': 'right'
+                };
+                
+                if (keyMap[keyName]) {
+                    keyName = keyMap[keyName];
+                }
+                
+                keys.push(keyName);
+            }
+            
+            if (keys.length > 0) {
+                const hotkeyString = keys.join('+');
+                currentHotkey = hotkeyString;
+                console.log('Generated hotkey string:', hotkeyString);
+                
+                // Update displays
+                document.getElementById('hotkeyDisplay').textContent = formatHotkey(hotkeyString);
+                document.getElementById('hotkeyDisplay2').textContent = formatHotkey(hotkeyString);
+                
+                // Reset capture state
+                finishHotkeyCapture();
+                
+                // Update backend with new hotkey
+                updateBackendHotkey();
+            }
+        }
+
+        function formatHotkey(hotkeyString) {
+            return hotkeyString
+                .replace('cmd', 'Cmd')
+                .replace('ctrl', 'Ctrl')
+                .replace('alt', 'Alt')
+                .replace('shift', 'Shift')
+                .split('+')
+                .join('+');
+        }
+
+        function finishHotkeyCapture() {
+            isCapturingHotkey = false;
+            const captureBtn = document.querySelector('.hotkey-capture');
+            const display = document.getElementById('hotkeyDisplay2');
+            
+            captureBtn.textContent = 'Change';
+            captureBtn.style.background = '#007aff';
+            display.style.background = '#f8f9fa';
+            display.style.border = '1px solid #d2d2d7';
+            
+            // 清理事件监听器和状态
+            document.removeEventListener('keydown', handleHotkeyCapture, true);
+            document.removeEventListener('keyup', handleHotkeyRelease, true);
+            pressedKeys.clear();
+            lastKeyEvent = null;
+            
+            // 清理超时
+            if (captureTimeout) {
+                clearTimeout(captureTimeout);
+                captureTimeout = null;
+            }
+        }
+
+        async function updateBackendHotkey() {
+            try {
+                if (window.tauriInvoke) {
+                    await window.tauriInvoke('update_hotkey', { newHotkey: currentHotkey });
+                    addDebug('Backend hotkey updated to: ' + currentHotkey);
+                    showStatus('Hotkey updated: ' + formatHotkey(currentHotkey), 'success');
+                    
+                    // Update tray menu to show new hotkey
+                    try {
+                        await window.tauriInvoke('update_tray_model', {
+                            modelName: document.getElementById('model').value || "Not Selected"
+                        });
+                        addDebug('Tray menu updated with new hotkey');
+                    } catch (trayError) {
+                        addDebug('Failed to update tray menu: ' + trayError);
+                    }
+                    
+                    // Also auto-save settings
+                    autoSaveSettings();
+                }
+            } catch (error) {
+                addDebug('Failed to update backend hotkey: ' + error);
+                showStatus('Failed to update hotkey: ' + error, 'error');
+            }
+        }
+
+        function addDebug(message) {
+            // Simple console logging instead of DOM manipulation
+            console.log('[Debug]', new Date().toLocaleTimeString(), message);
+        }
+
+        function showStatus(message, type) {
+            const status = document.getElementById('status');
+            status.textContent = message;
+            status.className = `status ${type}`;
+            status.style.display = 'block';
+            setTimeout(() => status.style.display = 'none', 3000);
+        }
+
+        async function takeInteractiveScreenshot() {
+            addDebug('Take interactive screenshot clicked');
+            try {
+                if (!window.tauriInvoke) {
+                    addDebug('ERROR: Tauri invoke not available');
+                    showStatus('Tauri API not available', 'error');
+                    return;
+                }
+
+                addDebug('Starting interactive screenshot - select region with mouse...');
+                showStatus('Select region with mouse cursor...', 'success');
+
+                const imageData = await window.tauriInvoke('take_interactive_screenshot');
+                addDebug('Interactive screenshot taken, analyzing...');
+
+                const result = await window.tauriInvoke('analyze_image', { imageData });
+                addDebug('Analysis result: ' + result);
+
+                // Copy to clipboard
+                try {
+                    await window.tauriInvoke('copy_to_clipboard', { text: result });
+                    addDebug('Result copied to clipboard');
+                    showStatus('Screenshot analyzed and copied to clipboard!', 'success');
+                } catch (clipboardError) {
+                    addDebug('Failed to copy to clipboard: ' + clipboardError);
+                    showStatus('Screenshot analyzed successfully!', 'success');
+                }
+
+                // Result is already copied to clipboard, no need for modal
+            } catch (error) {
+                addDebug('Interactive screenshot error: ' + error);
+                if (error.toString().includes('cancelled')) {
+                    showStatus('Screenshot cancelled', 'error');
+                } else {
+                    showStatus('Screenshot failed: ' + error, 'error');
+
+                    // Show system notification
+                    try {
+                        await window.tauriInvoke('show_system_notification', {
+                            title: 'MathImage Error',
+                            message: 'Screenshot failed: ' + error
+                        });
+                    } catch (notifError) {
+                        addDebug('Failed to show notification: ' + notifError);
+                    }
+                }
+            }
+        }
+
+        async function takeRegionScreenshot() {
+            addDebug('Take region screenshot clicked');
+
+            // Show region selection dialog
+            const regionDialog = `
+                <div style="margin: 10px 0;">
+                    <label>X coordinate: <input type="number" id="regionX" value="540" style="width: 80px;"></label>
+                    <label>Y coordinate: <input type="number" id="regionY" value="300" style="width: 80px;"></label>
+                </div>
+                <div style="margin: 10px 0;">
+                    <label>Width: <input type="number" id="regionW" value="800" style="width: 80px;"></label>
+                    <label>Height: <input type="number" id="regionH" value="600" style="width: 80px;"></label>
+                </div>
+                <div style="margin: 10px 0; font-size: 12px; color: #666;">
+                    Tip: Use smaller regions (400x300) for faster processing
+                </div>
+            `;
+
+            // Create a simple modal dialog
+            const modal = document.createElement('div');
+            modal.style.cssText = `
+                position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+                background: rgba(0,0,0,0.5); display: flex; align-items: center;
+                justify-content: center; z-index: 1000;
+            `;
+
+            const dialog = document.createElement('div');
+            dialog.style.cssText = `
+                background: white; padding: 20px; border-radius: 8px;
+                box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            `;
+
+            dialog.innerHTML = `
+                <h3>Select Screenshot Region</h3>
+                ${regionDialog}
+                <div style="margin-top: 15px;">
+                    <button id="confirmRegion" class="btn-primary">Take Screenshot</button>
+                    <button id="cancelRegion" class="btn-secondary" style="margin-left: 10px;">Cancel</button>
+                </div>
+            `;
+
+            modal.appendChild(dialog);
+            document.body.appendChild(modal);
+
+            // Handle dialog buttons
+            document.getElementById('confirmRegion').onclick = async () => {
+                const regionX = parseInt(document.getElementById('regionX').value) || 540;
+                const regionY = parseInt(document.getElementById('regionY').value) || 300;
+                const regionW = parseInt(document.getElementById('regionW').value) || 800;
+                const regionH = parseInt(document.getElementById('regionH').value) || 600;
+
+                document.body.removeChild(modal);
+
+                try {
+                    if (!window.tauriInvoke) {
+                        addDebug('ERROR: Tauri invoke not available');
+                        showStatus('Tauri API not available', 'error');
+                        return;
+                    }
+
+                    addDebug(`Taking region screenshot: ${regionX},${regionY} ${regionW}x${regionH}`);
+                    const imageData = await window.tauriInvoke('take_screenshot_region', {
+                        x: regionX,
+                        y: regionY,
+                        width: regionW,
+                        height: regionH
+                    });
+                    addDebug('Region screenshot taken, analyzing...');
+
+                    const result = await window.tauriInvoke('analyze_image', { imageData });
+                    addDebug('Analysis result: ' + result);
+
+                    // Copy to clipboard
+                    try {
+                        await window.tauriInvoke('copy_to_clipboard', { text: result });
+                        addDebug('Result copied to clipboard');
+                        showStatus('Screenshot analyzed and copied to clipboard!', 'success');
+                    } catch (clipboardError) {
+                        addDebug('Failed to copy to clipboard: ' + clipboardError);
+                        showStatus('Screenshot analyzed successfully!', 'success');
+                    }
+
+                    // Show result in a popup or dedicated area
+                    alert('Analysis Result (copied to clipboard):\n\n' + result);
+                } catch (error) {
+                    addDebug('Region screenshot error: ' + error);
+                    showStatus('Region screenshot failed: ' + error, 'error');
+                }
+            };
+
+            document.getElementById('cancelRegion').onclick = () => {
+                document.body.removeChild(modal);
+                addDebug('Region screenshot cancelled');
+            };
+        }
+
+        async function loadModels() {
+            addDebug('Load models clicked');
+            const baseUrl = document.getElementById('apiBaseUrl').value;
+            const apiKey = document.getElementById('apiKey').value;
+
+            if (!baseUrl || !apiKey) {
+                showStatus('Please enter API URL and key first', 'error');
+                return;
+            }
+
+            try {
+                const models = await window.tauriInvoke('get_models', { baseUrl, apiKey });
+                addDebug(`Loaded ${models.length} models`);
+
+                const select = document.getElementById('model');
+                select.innerHTML = '<option value="">Select a model...</option>';
+                models.forEach(model => {
+                    const option = document.createElement('option');
+                    option.value = model.id;
+                    option.textContent = model.id;
+                    select.appendChild(option);
+                });
+
+                // Update tray menu with loaded models
+                try {
+                    await window.tauriInvoke('refresh_tray_models');
+                    addDebug('Tray menu updated with loaded models');
+                } catch (trayError) {
+                    addDebug('Failed to update tray menu: ' + trayError);
+                }
+
+                showStatus(`Loaded ${models.length} models`, 'success');
+                showSuccessToast(`Successfully loaded ${models.length} models`);
+
+                // 更新自定义select
+                if (window.updateCustomSelectOptions) {
+                    window.updateCustomSelectOptions();
+                }
+            } catch (error) {
+                addDebug('Load models error: ' + error);
+                showStatus('Failed to load models: ' + error, 'error');
+            }
+        }
+
+
+
+        async function loadSettings() {
+            try {
+                const config = await window.tauriInvoke('get_config');
+                document.getElementById('apiBaseUrl').value = config.api_base_url;
+                document.getElementById('apiKey').value = config.api_key;
+                document.getElementById('model').value = config.model;
+                document.getElementById('prompt').value = config.prompt;
+                document.getElementById('soundEnabled').checked = config.sound_enabled !== false; // Default to true
+                
+                // Load hotkey
+                if (config.hotkey) {
+                    currentHotkey = config.hotkey;
+                    const formatted = formatHotkey(config.hotkey);
+                    document.getElementById('hotkeyDisplay').textContent = formatted;
+                    document.getElementById('hotkeyDisplay2').textContent = formatted;
+                }
+                
+                addDebug('Settings loaded');
+
+                // 更新自定义select
+                if (window.updateCustomSelectOptions) {
+                    window.updateCustomSelectOptions();
+                }
+            } catch (error) {
+                addDebug('Load settings error: ' + error);
+            }
+        }
+
+        async function saveSettings() {
+            try {
+                const config = {
+                    api_base_url: document.getElementById('apiBaseUrl').value,
+                    api_key: document.getElementById('apiKey').value,
+                    model: document.getElementById('model').value,
+                    prompt: document.getElementById('prompt').value,
+                    hotkey: currentHotkey,
+                    sound_enabled: document.getElementById('soundEnabled').checked
+                };
+
+                await window.tauriInvoke('update_config', { newConfig: config });
+                showStatus('Settings saved!', 'success');
+                addDebug('Settings saved');
+            } catch (error) {
+                showStatus('Failed to save: ' + error, 'error');
+                addDebug('Save error: ' + error);
+            }
+        }
+
+        // Auto-save settings when fields change
+        let autoSaveTimeout;
+        async function autoSaveSettings() {
+            // Debounce auto-save to avoid too frequent saves
+            clearTimeout(autoSaveTimeout);
+            autoSaveTimeout = setTimeout(async () => {
+                try {
+                    const config = {
+                        api_base_url: document.getElementById('apiBaseUrl').value,
+                        api_key: document.getElementById('apiKey').value,
+                        model: document.getElementById('model').value,
+                        prompt: document.getElementById('prompt').value,
+                        hotkey: currentHotkey,
+                        sound_enabled: document.getElementById('soundEnabled').checked
+                    };
+
+                    await window.tauriInvoke('update_config', { newConfig: config });
+
+                    // Update tray menu with current model
+                    try {
+                        await window.tauriInvoke('update_tray_model', {
+                            modelName: config.model || "Not Selected"
+                        });
+                        addDebug('Tray menu updated with model: ' + (config.model || "Not Selected"));
+                    } catch (trayError) {
+                        addDebug('Failed to update tray menu: ' + trayError);
+                    }
+
+                    addDebug('Settings auto-saved');
+                } catch (error) {
+                    addDebug('Auto-save error: ' + error);
+                }
+            }, 500); // Wait 500ms after last change
+        }
+
+        function showErrorModal(errorMessage) {
+            // Create modal
+            const modal = document.createElement('div');
+            modal.style.cssText = `
+                position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+                background: rgba(0,0,0,0.6); display: flex; align-items: center;
+                justify-content: center; z-index: 1000;
+            `;
+
+            const dialog = document.createElement('div');
+            dialog.style.cssText = `
+                background: white; padding: 30px; border-radius: 15px;
+                box-shadow: 0 10px 30px rgba(0,0,0,0.3); max-width: 400px;
+                text-align: center; border-left: 5px solid #dc3545;
+            `;
+
+            dialog.innerHTML = `
+                <div style="color: #dc3545; font-size: 48px; margin-bottom: 15px;">⚠️</div>
+                <h3 style="color: #dc3545; margin: 0 0 15px 0;">Error</h3>
+                <div style="color: #666; margin-bottom: 20px; line-height: 1.5;">${errorMessage}</div>
+                <button id="closeError" class="btn-primary" style="min-width: 100px;">OK</button>
+            `;
+
+            modal.appendChild(dialog);
+            document.body.appendChild(modal);
+
+            // Close button handler
+            document.getElementById('closeError').onclick = () => {
+                document.body.removeChild(modal);
+            };
+
+            // Click outside to close
+            modal.onclick = (e) => {
+                if (e.target === modal) {
+                    document.body.removeChild(modal);
+                }
+            };
+
+            // Auto close after 5 seconds
+            setTimeout(() => {
+                if (document.body.contains(modal)) {
+                    document.body.removeChild(modal);
+                }
+            }, 5000);
+        }
+
+        function showSuccessToast(message) {
+            // Create toast with Apple design
+            const toast = document.createElement('div');
+            toast.style.cssText = `
+                position: fixed; top: 20px; right: 20px;
+                background: rgba(255, 255, 255, 0.95); color: #1d1d1f;
+                padding: 12px 16px; border-radius: 12px;
+                box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+                backdrop-filter: blur(20px); border: 1px solid rgba(0, 0, 0, 0.1);
+                z-index: 1000; font-weight: 500; font-size: 14px;
+                transform: translateY(-20px) scale(0.95); opacity: 0;
+                transition: all 0.3s ease;
+            `;
+
+            toast.innerHTML = `
+                <div style="display: flex; align-items: center; gap: 8px;">
+                    <div style="width: 6px; height: 6px; background: #34c759; border-radius: 50%;"></div>
+                    <span>${message}</span>
+                </div>
+            `;
+
+            document.body.appendChild(toast);
+
+            // Animate in
+            setTimeout(() => {
+                toast.style.transform = 'translateY(0) scale(1)';
+                toast.style.opacity = '1';
+            }, 100);
+
+            // Auto remove after 3 seconds
+            setTimeout(() => {
+                toast.style.transform = 'translateY(-20px) scale(0.95)';
+                toast.style.opacity = '0';
+                setTimeout(() => {
+                    if (document.body.contains(toast)) {
+                        document.body.removeChild(toast);
+                    }
+                }, 300);
+            }, 3000);
+        }
+
+        document.getElementById('settingsForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            saveSettings();
+        });
+
+        // Initialize
+        window.addEventListener('load', () => {
+            addDebug('Page loaded');
+
+            // 先初始化自定义select
+            initCustomSelect();
+
+            // Check for Tauri invoke with multiple attempts
+            function checkTauriAPI(attempts = 0) {
+                addDebug(`Checking Tauri invoke (attempt ${attempts + 1})`);
+                addDebug(`window.tauriInvoke exists: ${!!window.tauriInvoke}`);
+
+                if (window.tauriInvoke) {
+                    addDebug('Tauri invoke detected');
+                    loadSettings();
+                    return;
+                }
+
+                if (attempts < 10) {
+                    setTimeout(() => checkTauriAPI(attempts + 1), 200);
+                } else {
+                    addDebug('ERROR: Tauri invoke not found after 10 attempts');
+                    addDebug('Module import might have failed');
+                }
+            }
+
+            checkTauriAPI();
+        });
+
+        // Listen for global shortcut events
+        if (window.__TAURI__ && window.__TAURI__.event) {
+            window.__TAURI__.event.listen('analysis_result', (event) => {
+                addDebug('Global shortcut analysis result: ' + event.payload);
+                showStatus('Screenshot analyzed via hotkey and copied to clipboard!', 'success');
+                // Don't show alert for hotkey results since they're copied to clipboard
+            });
+
+            window.__TAURI__.event.listen('analysis_error', (event) => {
+                addDebug('Global shortcut analysis error: ' + event.payload);
+                // System notification is shown by backend, no need for modal
+            });
+
+            window.__TAURI__.event.listen('screenshot_error', (event) => {
+                addDebug('Global shortcut screenshot error: ' + event.payload);
+                // Error dialog is shown by backend, no need for modal
+            });
+
+            window.__TAURI__.event.listen('show_error_dialog', (event) => {
+                addDebug('Showing error dialog: ' + event.payload);
+                showErrorModal(event.payload);
+            });
+        }
+
+        // 自定义select控制
+        function initCustomSelect() {
+            const trigger = document.getElementById('customSelectTrigger');
+            const options = document.getElementById('customSelectOptions');
+            const text = document.getElementById('customSelectText');
+            const originalSelect = document.getElementById('model');
+
+            console.log('initCustomSelect called');
+            console.log('trigger:', trigger);
+            console.log('options:', options);
+            console.log('text:', text);
+            console.log('originalSelect:', originalSelect);
+
+            if (!trigger || !options || !text || !originalSelect) {
+                console.error('Some custom select elements not found');
+                return;
+            }
+
+            // 点击触发器
+            trigger.addEventListener('click', (e) => {
+                console.log('Custom select trigger clicked');
+                e.stopPropagation();
+                const isActive = trigger.classList.contains('active');
+                console.log('isActive:', isActive);
+
+                if (isActive) {
+                    closeCustomSelect();
+                } else {
+                    openCustomSelect();
+                }
+            });
+
+            // 点击外部关闭
+            document.addEventListener('click', () => {
+                closeCustomSelect();
+            });
+
+            function openCustomSelect() {
+                console.log('Opening custom select');
+                trigger.classList.add('active');
+                options.classList.add('show');
+            }
+
+            function closeCustomSelect() {
+                console.log('Closing custom select');
+                trigger.classList.remove('active');
+                options.classList.remove('show');
+            }
+
+            // 选择选项
+            function selectOption(value, displayText) {
+                text.textContent = displayText;
+                originalSelect.value = value;
+
+                // 更新选中状态
+                document.querySelectorAll('.custom-select-option').forEach(opt => {
+                    opt.classList.remove('selected');
+                });
+
+                if (value) {
+                    const selectedOption = document.querySelector(`[data-value="${value}"]`);
+                    if (selectedOption) {
+                        selectedOption.classList.add('selected');
+                    }
+                }
+
+                closeCustomSelect();
+                autoSaveSettings();
+            }
+
+            // 更新选项
+            window.updateCustomSelectOptions = function() {
+                options.innerHTML = '';
+
+                // 添加默认选项
+                const defaultOption = document.createElement('div');
+                defaultOption.className = 'custom-select-option';
+                defaultOption.textContent = 'Select a model...';
+                defaultOption.addEventListener('click', () => selectOption('', 'Select a model...'));
+                options.appendChild(defaultOption);
+
+                // 添加模型选项
+                Array.from(originalSelect.options).forEach(option => {
+                    if (option.value) {
+                        const customOption = document.createElement('div');
+                        customOption.className = 'custom-select-option';
+                        customOption.textContent = option.textContent;
+                        customOption.setAttribute('data-value', option.value);
+                        customOption.addEventListener('click', () => selectOption(option.value, option.textContent));
+                        options.appendChild(customOption);
+                    }
+                });
+
+                // 更新当前选中状态
+                const currentValue = originalSelect.value;
+                if (currentValue) {
+                    const selectedOption = originalSelect.options[originalSelect.selectedIndex];
+                    text.textContent = selectedOption.textContent;
+                    const customOption = document.querySelector(`[data-value="${currentValue}"]`);
+                    if (customOption) {
+                        customOption.classList.add('selected');
+                    }
+                } else {
+                    text.textContent = 'Select a model...';
+                }
+            };
+        }
+    </script>
+</body>
+</html>

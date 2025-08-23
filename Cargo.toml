@@ -1,0 +1,20 @@
+[package]
+name = "mathimage"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+tokio = { version = "1.0", features = ["full"] }
+reqwest = { version = "0.11", features = ["json", "stream"] }
+futures-util = "0.3"
+futures = "0.3"
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+base64 = "0.21"
+screenshots = "0.7"
+image = "0.24"
+arboard = "3.2"
+tauri = { version = "1.0", features = ["api-all", "system-tray"] }
+
+[build-dependencies]
+tauri-build = "1.0"
