@@ -868,8 +868,35 @@ async fn main() {
             _ => {}
         })
         .setup(|app| {
-            // Setup tray and shortcuts
-            tauri::async_runtime::block_on(setup_tray_and_shortcuts(app))?;
+            // Create a basic tray icon
+            let quit_item = MenuItemBuilder::new("Quit").id("quit").build(app)?;
+            let settings_item = MenuItemBuilder::new("Settings").id("settings").build(app)?;
+            
+            let menu = MenuBuilder::new(app)
+                .item(&settings_item)
+                .separator()
+                .item(&quit_item)
+                .build()?;
+
+            let _tray = TrayIconBuilder::new()
+                .menu(&menu)
+                .on_menu_event(|app, event| {
+                    match event.id().as_ref() {
+                        "settings" => {
+                            if let Some(webview_window) = app.get_webview_window("main") {
+                                let _ = webview_window.show();
+                                let _ = webview_window.set_focus();
+                            }
+                        }
+                        "quit" => {
+                            std::process::exit(0);
+                        }
+                        _ => {}
+                    }
+                })
+                .build(app)?;
+
+            println!("Basic tray created successfully");
             Ok(())
         })
         .run(tauri::generate_context!())
