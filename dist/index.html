@@ -776,6 +776,36 @@
 
         async function loadModels() {
             addDebug('Load models clicked');
+            
+            // First check if we have pre-loaded models from tray
+            try {
+                const preLoadedModels = await window.tauriInvoke('get_loaded_models');
+                if (preLoadedModels && preLoadedModels.length > 0) {
+                    addDebug(`Found ${preLoadedModels.length} pre-loaded models from tray`);
+                    
+                    const select = document.getElementById('model');
+                    select.innerHTML = '<option value="">Select a model...</option>';
+                    preLoadedModels.forEach(modelId => {
+                        const option = document.createElement('option');
+                        option.value = modelId;
+                        option.textContent = modelId;
+                        select.appendChild(option);
+                    });
+
+                    showStatus(`Loaded ${preLoadedModels.length} models from cache`, 'success');
+                    showSuccessToast(`Successfully loaded ${preLoadedModels.length} models`);
+
+                    // 更新自定义select
+                    if (window.updateCustomSelectOptions) {
+                        window.updateCustomSelectOptions();
+                    }
+                    return;
+                }
+            } catch (preLoadError) {
+                addDebug('No pre-loaded models available: ' + preLoadError);
+            }
+            
+            // Fallback to API fetch if no pre-loaded models
             const baseUrl = document.getElementById('apiBaseUrl').value;
             const apiKey = document.getElementById('apiKey').value;
 
@@ -786,7 +816,7 @@
 
             try {
                 const models = await window.tauriInvoke('get_models', { baseUrl, apiKey });
-                addDebug(`Loaded ${models.length} models`);
+                addDebug(`Loaded ${models.length} models from API`);
 
                 const select = document.getElementById('model');
                 select.innerHTML = '<option value="">Select a model...</option>';
@@ -825,7 +855,6 @@
                 const config = await window.tauriInvoke('get_config');
                 document.getElementById('apiBaseUrl').value = config.api_base_url;
                 document.getElementById('apiKey').value = config.api_key;
-                document.getElementById('model').value = config.model;
                 document.getElementById('prompt').value = config.prompt;
                 document.getElementById('soundEnabled').checked = config.sound_enabled !== false; // Default to true
                 
@@ -835,6 +864,34 @@
                     const formatted = formatHotkey(config.hotkey);
                     document.getElementById('hotkeyDisplay').textContent = formatted;
                     document.getElementById('hotkeyDisplay2').textContent = formatted;
+                }
+                
+                // Handle model setting - check if we need to load models first
+                const modelSelect = document.getElementById('model');
+                if (config.model && config.model.trim() !== '') {
+                    // Check if the model option already exists
+                    const modelExists = Array.from(modelSelect.options).some(option => option.value === config.model);
+                    
+                    if (!modelExists) {
+                        // Model doesn't exist in select, try to load models first
+                        addDebug('Model from config not found in select, loading models first...');
+                        try {
+                            await loadModels();
+                            // After loading models, try to set the model again
+                            modelSelect.value = config.model;
+                            addDebug(`Model set to: ${config.model} after loading models`);
+                        } catch (modelLoadError) {
+                            addDebug('Failed to load models when setting config model: ' + modelLoadError);
+                            modelSelect.value = config.model; // Set anyway, might work
+                        }
+                    } else {
+                        // Model option exists, set it directly
+                        modelSelect.value = config.model;
+                        addDebug(`Model set to: ${config.model}`);
+                    }
+                } else {
+                    // No model in config, just clear the selection
+                    modelSelect.value = '';
                 }
                 
                 addDebug('Settings loaded');

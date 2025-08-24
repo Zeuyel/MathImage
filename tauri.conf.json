@@ -18,10 +18,7 @@
         "visible": false
       }
     ],
-    "trayIcon": {
-      "iconPath": "icons/32x32.png",
-      "iconAsTemplate": false
-    },
+
     "security": {
       "csp": null
     }
