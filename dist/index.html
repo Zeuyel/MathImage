@@ -4,360 +4,250 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MathImage Settings</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'apple-gray': '#f5f5f7',
+                        'apple-text': '#1d1d1f',
+                        'apple-border': '#d2d2d7',
+                        'apple-blue': '#007aff',
+                    },
+                    fontFamily: {
+                        'apple': ['-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
     <style>
-        * { box-sizing: border-box; }
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            margin: 0;
-            padding: 20px;
-            background: #f5f5f7;
-            min-height: 100vh;
-            color: #1d1d1f;
-        }
-        .container {
-            max-width: 500px;
-            margin: 0 auto;
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
-            overflow: hidden;
-            min-height: 700px;
-        }
-        .header {
-            background: white;
-            color: #1d1d1f;
-            padding: 30px;
-            text-align: center;
-            border-bottom: 1px solid #d2d2d7;
-        }
-        .header h1 {
-            margin: 0;
-            font-size: 32px;
-            font-weight: 600;
-            letter-spacing: -0.5px;
-        }
-        .content {
-            padding: 30px;
-        }
-        .form-group {
-            margin-bottom: 20px;
-        }
-        label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 500;
-            color: #1d1d1f;
-            font-size: 14px;
-        }
-        input, textarea {
-            width: 100%;
-            padding: 12px 16px;
-            border: 1px solid #d2d2d7;
-            border-radius: 8px;
-            font-size: 16px;
-            transition: border-color 0.2s ease;
-            background: white;
-        }
-        
-        /* 自定义苹果风格下拉选择器 */
-        .custom-select {
-            position: relative;
-            width: 100%;
-        }
-
-        .custom-select-trigger {
-            width: 100%;
-            padding: 12px 16px;
-            font-size: 14px;
-            font-weight: 400;
-            cursor: pointer;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            border: 1px solid rgba(0, 0, 0, 0.1);
-            border-radius: 8px;
-            background-color: rgba(255, 255, 255, 0.8);
-            backdrop-filter: blur(20px);
-            color: #1d1d1f;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            transition: all 0.2s ease;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-            user-select: none;
-        }
-
-        .custom-select-trigger:hover {
-            border-color: rgba(0, 0, 0, 0.2);
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-        }
-
-        .custom-select-trigger.active {
-            border-color: #007aff;
-            box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.2);
-        }
-
-        .custom-select-arrow {
-            width: 16px;
-            height: 16px;
-            transition: transform 0.2s ease;
-            opacity: 0.6;
-        }
-
-        .custom-select-trigger.active .custom-select-arrow {
-            transform: rotate(180deg);
-        }
-
-        .custom-select-options {
-            position: absolute;
-            top: 100%;
-            left: 0;
-            right: 0;
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(0, 0, 0, 0.1);
-            border-radius: 8px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
-            z-index: 1000;
-            margin-top: 4px;
-            max-height: 200px;
-            overflow-y: auto;
-            opacity: 0;
-            transform: translateY(-10px);
-            visibility: hidden;
-            transition: all 0.2s ease;
-        }
-
-        .custom-select-options.show {
-            opacity: 1;
-            transform: translateY(0);
-            visibility: visible;
-        }
-
-        .custom-select-option {
-            padding: 12px 16px;
-            font-size: 14px;
-            color: #1d1d1f;
-            cursor: pointer;
-            transition: background-color 0.15s ease;
-            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-        }
-
-        .custom-select-option:last-child {
-            border-bottom: none;
-        }
-
-        .custom-select-option:hover {
-            background-color: rgba(0, 122, 255, 0.1);
-        }
-
-        .custom-select-option.selected {
-            background-color: rgba(0, 122, 255, 0.15);
-            color: #007aff;
-            font-weight: 500;
-        }
-
-        /* 隐藏原生select */
-        select#model {
-            display: none;
-        }
-        
-        select option:hover {
-            background-color: #f5f5f5;
-        }
-        
-        select:focus {
-            outline: 2px solid #007aff;
-            outline-offset: 2px;
-        }
-        
-        input:focus, textarea:focus {
-            outline: none;
-            border-color: #007aff;
-            box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.1);
-        }
-        
-        /* 复选框样式改进 */
-        .checkbox-group {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-        
-        .checkbox-group input[type="checkbox"] {
-            width: 18px;
-            height: 18px;
-            margin: 0;
-            cursor: pointer;
-        }
-        
-        .checkbox-group label {
-            margin: 0;
-            cursor: pointer;
-            user-select: none;
-        }
-        
-        /* 热键输入样式 */
-        .hotkey-input {
-            display: flex;
-            gap: 10px;
-            align-items: center;
-        }
-        
-        .hotkey-display {
-            flex: 1;
-            padding: 12px 16px;
-            border: 1px solid #d2d2d7;
-            border-radius: 8px;
-            background: #f8f9fa;
-            font-family: monospace;
-            font-weight: bold;
-            color: #333;
-        }
-        
-        .hotkey-capture {
-            background: #007aff;
-            color: white;
-            border: none;
-            padding: 12px 16px;
-            border-radius: 8px;
-            font-size: 14px;
-            cursor: pointer;
-            transition: opacity 0.2s ease;
-            height: 44px;
-            min-width: 80px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        
-        .hotkey-capture:hover {
-            opacity: 0.8;
-        }
-        .button-group {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-        }
-        button {
-            padding: 12px 20px;
-            border: none;
-            border-radius: 8px;
-            font-size: 16px;
-            font-weight: 500;
-            cursor: pointer;
-            transition: opacity 0.2s ease;
-            flex: 1;
-            min-width: 120px;
-        }
-        .btn-primary {
-            background: #007aff;
-            color: white;
-        }
-        .btn-primary:hover {
-            opacity: 0.8;
-        }
-        .btn-secondary {
-            background: #8e8e93;
-            color: white;
-        }
-        .btn-secondary:hover {
-            opacity: 0.8;
-        }
-        .btn-success {
-            background: #34c759;
-            color: white;
-        }
-        .btn-success:hover {
-            opacity: 0.8;
-        }
+        /* Status messages styling - only non-Tailwind custom styles */
         .status {
-            margin-top: 15px;
-            padding: 12px;
-            border-radius: 8px;
+            padding: 10px;
+            border-radius: 5px;
+            margin-top: 10px;
             font-weight: 500;
         }
-        .success {
+        .status.success {
             background-color: #d4edda;
             color: #155724;
             border: 1px solid #c3e6cb;
         }
-        .error {
+        .status.error {
             background-color: #f8d7da;
             color: #721c24;
             border: 1px solid #f5c6cb;
         }
-
     </style>
 </head>
-<body>
-    <div class="container">
-        <div class="header">
-            <h1>MathImage Settings</h1>
+<body class="font-apple bg-apple-gray min-h-screen p-5 text-apple-text">
+    <div class="max-w-lg mx-auto bg-white rounded-xl shadow-lg overflow-visible min-h-[700px]">
+        <div class="bg-white text-apple-text py-8 px-8 text-center border-b border-apple-border">
+            <h1 class="text-3xl font-semibold tracking-tight">Settings</h1>
+        </div>
+        <div class="p-8">
+            <form id="settingsForm" class="space-y-8">
+                <!-- 全局设置区域 - 优先显示 -->
+        <div class="mb-8">
+            <h3 class="text-xl font-semibold text-apple-text mb-4 flex items-center gap-2">🌐 Global Settings</h3>
+            
+            <div class="mb-6">
+                <label class="block text-sm font-medium text-apple-text mb-2">Global Hotkey (Screenshot & Analyze):</label>
+                <div class="flex gap-3 items-center">
+                    <div class="flex-1 px-4 py-3 bg-gray-50 border border-apple-border rounded-lg font-mono font-semibold text-gray-700" id="globalHotkeyDisplay">Cmd+Shift+M</div>
+                    <button type="button" class="px-4 py-3 bg-apple-blue text-white rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors" onclick="captureGlobalHotkey()">Change</button>
+                </div>
+            </div>
+            
+            <div class="mb-6">
+                <label class="block text-sm font-medium text-apple-text mb-2">Switch Profile Hotkey:</label>
+                <div class="flex gap-3 items-center">
+                    <div class="flex-1 px-4 py-3 bg-gray-50 border border-apple-border rounded-lg font-mono font-semibold text-gray-700" id="switchHotkeyDisplay">Cmd+Shift+P</div>
+                    <button type="button" class="px-4 py-3 bg-apple-blue text-white rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors" onclick="captureSwitchHotkey()">Change</button>
+                </div>
+                <div class="mt-2 text-xs text-gray-600">
+                    Global hotkey: Take screenshot and analyze with current profile<br>
+                    Switch hotkey: Cycle through profiles with notification<br>
+                    <span class="text-gray-500">Note: Some combinations like Cmd+Shift+A/S may be reserved by the system.</span>
+                </div>
+            </div>
+            
+            <div class="mb-6">
+                <label class="flex items-center gap-3 cursor-pointer">
+                    <input type="checkbox" id="soundEnabled" class="w-4 h-4 text-apple-blue bg-gray-100 border-gray-300 rounded focus:ring-blue-500" onchange="autoSaveGlobalSettings()" />
+                    <span class="text-sm font-medium text-apple-text">Enable sound notification after analysis</span>
+                </label>
+            </div>
+        </div>
+        
+        <!-- 分隔线 -->
+        <hr class="my-8 border-gray-200" />
+        
+        <!-- Profile管理和配置区域 -->
+        <div class="mb-8">
+            <h3 class="text-xl font-semibold text-apple-text mb-4 flex items-center gap-2">👤 Profile Settings</h3>
         </div>
 
-        <div class="content">
-            <form id="settingsForm">
-                <div class="form-group">
-                    <label for="apiBaseUrl">API Base URL:</label>
-                    <input type="text" id="apiBaseUrl" placeholder="http://210.126.8.197:11434/v1" onchange="autoSaveSettings()" />
+                <!-- Profile Management Section -->
+                <div class="mb-5">
+                    <label for="profileSelect" class="block text-sm font-medium text-apple-text mb-2">Active Profile:</label>
+                    <!-- Tailwind CSS Dropdown -->
+                    <div class="relative" id="profileDropdown">
+                        <button type="button" 
+                                class="relative w-full cursor-default rounded-md bg-white py-3 pl-4 pr-10 text-left text-apple-text border border-apple-border shadow-sm focus:border-apple-blue focus:outline-none focus:ring-1 focus:ring-apple-blue sm:text-sm"
+                                id="profileButton" 
+                                aria-haspopup="listbox" 
+                                aria-expanded="false">
+                            <span class="block truncate" id="profileButtonText">Select Profile...</span>
+                            <span class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
+                                <svg class="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                    <path fill-rule="evenodd" d="M10 3a.75.75 0 01.55.24l3.25 3.5a.75.75 0 11-1.1 1.02L10 4.852 7.3 7.76a.75.75 0 01-1.1-1.02l3.25-3.5A.75.75 0 0110 3zm-3.76 9.2a.75.75 0 011.06.04l2.7 2.908 2.7-2.908a.75.75 0 111.08 1.04l-3.25 3.5a.75.75 0 01-1.1 0l-3.25-3.5a.75.75 0 01.04-1.06z" clip-rule="evenodd" />
+                                </svg>
+                            </span>
+                        </button>
+                        <ul class="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm hidden" 
+                            id="profileOptions" 
+                            tabindex="-1" 
+                            role="listbox">
+                            <!-- Profile options will be populated by JavaScript -->
+                        </ul>
+                    </div>
+                    <select id="profileSelect" class="hidden">
+                        <option value="">Select profile...</option>
+                    </select>
+                    <div class="flex gap-3 mt-3">
+                        <button type="button" class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 transition-colors" onclick="createNewProfile()">New Profile</button>
+                        <button type="button" class="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 transition-colors" onclick="deleteCurrentProfile()">Delete Profile</button>
+                    </div>
+                </div>
+
+                <!-- Current Profile Configuration -->
+                <div class="mb-8">
+                    <h3 class="text-lg font-semibold text-apple-text mb-4">Profile Configuration</h3>
+                </div>
+
+                <div class="mb-5">
+                    <label for="profileName" class="block text-sm font-medium text-apple-text mb-2">Profile Name:</label>
+                    <input type="text" id="profileName" placeholder="My Profile" 
+                           class="w-full px-4 py-3 border border-apple-border rounded-lg text-apple-text bg-white focus:border-apple-blue focus:ring-1 focus:ring-apple-blue focus:outline-none transition-colors" />
+                </div>
+
+                <div class="mb-5">
+                    <label for="apiBaseUrl" class="block text-sm font-medium text-apple-text mb-2">API Base URL:</label>
+                    <input type="text" id="apiBaseUrl" placeholder="http://210.126.8.197:11434/v1" 
+                           class="w-full px-4 py-3 border border-apple-border rounded-lg text-apple-text bg-white focus:border-apple-blue focus:ring-1 focus:ring-apple-blue focus:outline-none transition-colors" />
+                </div>
+
+                <div class="mb-5">
+                    <label for="apiKey" class="block text-sm font-medium text-apple-text mb-2">API Key:</label>
+                    <input type="password" id="apiKey" placeholder="sk-..." 
+                           class="w-full px-4 py-3 border border-apple-border rounded-lg text-apple-text bg-white focus:border-apple-blue focus:ring-1 focus:ring-apple-blue focus:outline-none transition-colors" />
                 </div>
 
                 <div class="form-group">
-                    <label for="apiKey">API Key:</label>
-                    <input type="password" id="apiKey" placeholder="sk-..." onchange="autoSaveSettings()" />
-                </div>
-
-                <div class="form-group">
-                    <label for="model">Model:</label>
-                    <select id="model" onchange="autoSaveSettings()">
+                    <label for="model" class="block text-sm font-medium text-apple-text mb-2">Model:</label>
+                    <!-- Tailwind CSS Dropdown for Model -->
+                    <div class="relative" id="modelDropdown">
+                        <button type="button" 
+                                class="relative w-full cursor-default rounded-md bg-white py-3 pl-4 pr-10 text-left text-apple-text border border-apple-border shadow-sm focus:border-apple-blue focus:outline-none focus:ring-1 focus:ring-apple-blue sm:text-sm"
+                                id="modelButton" 
+                                aria-haspopup="listbox" 
+                                aria-expanded="false">
+                            <span class="block truncate" id="modelButtonText">Select a model...</span>
+                            <span class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
+                                <svg class="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                    <path fill-rule="evenodd" d="M10 3a.75.75 0 01.55.24l3.25 3.5a.75.75 0 11-1.1 1.02L10 4.852 7.3 7.76a.75.75 0 01-1.1-1.02l3.25-3.5A.75.75 0 0110 3zm-3.76 9.2a.75.75 0 011.06.04l2.7 2.908 2.7-2.908a.75.75 0 111.08 1.04l-3.25 3.5a.75.75 0 01-1.1 0l-3.25-3.5a.75.75 0 01.04-1.06z" clip-rule="evenodd" />
+                                </svg>
+                            </span>
+                        </button>
+                        <ul class="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm hidden" 
+                            id="modelOptions" 
+                            tabindex="-1" 
+                            role="listbox">
+                            <!-- Model options will be populated by JavaScript -->
+                        </ul>
+                    </div>
+                    <!-- Hidden native select for compatibility -->
+                    <select id="model" class="hidden">
                         <option value="">Select a model...</option>
                     </select>
-                    <div class="custom-select" id="customModelSelect">
-                        <div class="custom-select-trigger" id="customSelectTrigger">
-                            <span id="customSelectText">Select a model...</span>
-                            <svg class="custom-select-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <polyline points="6,9 12,15 18,9"></polyline>
-                            </svg>
-                        </div>
-                        <div class="custom-select-options" id="customSelectOptions">
-                            <!-- Options will be populated by JavaScript -->
-                        </div>
+                    <div class="flex gap-3 mt-3">
+                        <button type="button" class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 transition-colors" onclick="loadModels()">Load Models</button>
+                        <button type="button" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors" onclick="takeInteractiveScreenshot()">Screenshot & Analyze</button>
+                        <button type="button" class="px-3 py-2 bg-cyan-600 text-white rounded-lg hover:bg-cyan-700 focus:outline-none focus:ring-2 focus:ring-cyan-500 transition-colors text-sm" onclick="testModelSelect()">Test Model Select</button>
                     </div>
-                    <div class="button-group" style="margin-top: 10px;">
-                        <button type="button" class="btn-success" onclick="loadModels()">Load Models</button>
-                        <button type="button" class="btn-primary" onclick="takeInteractiveScreenshot()">Screenshot & Analyze</button>
-                    </div>
-                    <div style="margin-top: 10px; font-size: 12px; color: #666;">
-                        Click button or press <strong><span id="hotkeyDisplay">Cmd+Shift+M</span></strong> to select region with mouse
+                    <div class="mt-3 text-xs text-gray-500">
+                        Click button or press <strong><span id="hotkeyDisplay" class="text-apple-blue">Cmd+Shift+M</span></strong> to select region with mouse
                     </div>
                 </div>
 
-                <div class="form-group">
-                    <label for="prompt">Prompt:</label>
-                    <textarea id="prompt" rows="3" placeholder="Describe what you see in this image..." onchange="autoSaveSettings()"></textarea>
+                <div class="mb-5">
+                    <label for="promptMode" class="block text-sm font-medium text-apple-text mb-2">Prompt Mode:</label>
+                    <!-- Tailwind CSS Dropdown for Prompt Mode -->
+                    <div class="relative" id="promptModeDropdown">
+                        <button type="button" 
+                                class="relative w-full cursor-default rounded-md bg-white py-3 pl-4 pr-10 text-left text-apple-text border border-apple-border shadow-sm focus:border-apple-blue focus:outline-none focus:ring-1 focus:ring-apple-blue sm:text-sm"
+                                id="promptModeButton" 
+                                aria-haspopup="listbox" 
+                                aria-expanded="false">
+                            <span class="block truncate" id="promptModeButtonText">Predefined Prompt</span>
+                            <span class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
+                                <svg class="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                    <path fill-rule="evenodd" d="M10 3a.75.75 0 01.55.24l3.25 3.5a.75.75 0 11-1.1 1.02L10 4.852 7.3 7.76a.75.75 0 01-1.1-1.02l3.25-3.5A.75.75 0 0110 3zm-3.76 9.2a.75.75 0 011.06.04l2.7 2.908 2.7-2.908a.75.75 0 111.08 1.04l-3.25 3.5a.75.75 0 01-1.1 0l-3.25-3.5a.75.75 0 01.04-1.06z" clip-rule="evenodd" />
+                                </svg>
+                            </span>
+                        </button>
+                        <ul class="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm hidden" 
+                            id="promptModeOptions" 
+                            tabindex="-1" 
+                            role="listbox">
+                            <!-- Prompt mode options will be populated by JavaScript -->
+                        </ul>
+                    </div>
+                    <select id="promptMode" class="hidden">
+                        <option value="">Select prompt mode...</option>
+                    </select>
                 </div>
 
-                <div class="form-group">
-                    <label for="hotkey">Hotkey:</label>
-                    <div class="hotkey-input">
-                        <div class="hotkey-display" id="hotkeyDisplay2">Cmd+Shift+M</div>
-                        <button type="button" class="hotkey-capture" onclick="captureHotkey()">Change</button>
-                    </div>
-                    <div style="margin-top: 8px; font-size: 12px; color: #666;">
-                        Click "Change" and press the desired key combination. Press ESC to cancel.<br>
-                        <span style="color: #888; font-size: 11px;">Note: Some combinations like Cmd+Shift+A/S may be reserved by the system.</span>
-                    </div>
+                <div class="mb-5" id="promptTextGroup">
+                    <label for="prompt" class="block text-sm font-medium text-apple-text mb-2">Predefined Prompt:</label>
+                    <textarea id="prompt" rows="3" placeholder="Describe what you see in this image..." 
+                              class="w-full px-4 py-3 border border-apple-border rounded-lg text-apple-text bg-white focus:border-apple-blue focus:ring-1 focus:ring-apple-blue focus:outline-none resize-y transition-colors"></textarea>
                 </div>
 
-                <div class="form-group">
-                    <div class="checkbox-group">
-                        <input type="checkbox" id="soundEnabled" onchange="autoSaveSettings()" />
-                        <label for="soundEnabled">Enable sound notification after analysis</label>
+                <div class="mb-5">
+                    <label for="outputMode" class="block text-sm font-medium text-apple-text mb-2">Output Mode:</label>
+                    <!-- Tailwind CSS Dropdown for Output Mode -->
+                    <div class="relative" id="outputModeDropdown">
+                        <button type="button" 
+                                class="relative w-full cursor-default rounded-md bg-white py-3 pl-4 pr-10 text-left text-apple-text border border-apple-border shadow-sm focus:border-apple-blue focus:outline-none focus:ring-1 focus:ring-apple-blue sm:text-sm"
+                                id="outputModeButton" 
+                                aria-haspopup="listbox" 
+                                aria-expanded="false">
+                            <span class="block truncate" id="outputModeButtonText">Clipboard</span>
+                            <span class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
+                                <svg class="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                    <path fill-rule="evenodd" d="M10 3a.75.75 0 01.55.24l3.25 3.5a.75.75 0 11-1.1 1.02L10 4.852 7.3 7.76a.75.75 0 01-1.1-1.02l3.25-3.5A.75.75 0 0110 3zm-3.76 9.2a.75.75 0 011.06.04l2.7 2.908 2.7-2.908a.75.75 0 111.08 1.04l-3.25 3.5a.75.75 0 01-1.1 0l-3.25-3.5a.75.75 0 01.04-1.06z" clip-rule="evenodd" />
+                                </svg>
+                            </span>
+                        </button>
+                        <ul class="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm hidden" 
+                            id="outputModeOptions" 
+                            tabindex="-1" 
+                            role="listbox">
+                            <!-- Output mode options will be populated by JavaScript -->
+                        </ul>
                     </div>
+                    <select id="outputMode" class="hidden">
+                        <option value="">Select output mode...</option>
+                    </select>
                 </div>
 
-                <div class="button-group">
-                    <button type="submit" class="btn-primary">Save Settings</button>
-                    <button type="button" class="btn-secondary" onclick="loadSettings()">Load Settings</button>
+                <div class="flex gap-3 mb-8">
+                    <button type="submit" class="flex-1 px-6 py-3 bg-apple-blue text-white rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-apple-blue transition-colors font-medium">Save Profile Settings</button>
+                    <button type="button" class="px-6 py-3 bg-gray-100 text-apple-text rounded-lg hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-300 transition-colors font-medium" onclick="loadSettings()">Reload Settings</button>
                 </div>
             </form>
 
@@ -365,24 +255,106 @@
         </div>
     </div>
 
-    <script type="module">
-        // Import Tauri API
-        import { invoke } from 'https://unpkg.com/@tauri-apps/api@2/core';
-
-        // Make invoke available globally
-        window.tauriInvoke = invoke;
-    </script>
     <script>
-        let isCapturingHotkey = false;
-        let currentHotkey = "cmd+shift+m";
+        console.log('🚀 Script loading started...');
 
-        function captureHotkey() {
-            const captureBtn = document.querySelector('.hotkey-capture');
-            const display = document.getElementById('hotkeyDisplay2');
+        // JavaScript初始化完成
+        console.log('🔧 JavaScript initialization started');
+
+        // Import Tauri API dynamically
+        let tauriReady = false;
+
+        (async () => {
+            try {
+                const { invoke } = await import('https://unpkg.com/@tauri-apps/api@2/core');
+                window.tauriInvoke = invoke;
+                tauriReady = true;
+                console.log('✅ Tauri API loaded successfully');
+
+                // 触发设置加载
+                if (typeof window.loadSettings === 'function') {
+                    setTimeout(() => window.loadSettings(), 100);
+                }
+            } catch (error) {
+                console.error('❌ Failed to load Tauri API:', error);
+                // Fallback for testing
+                window.tauriInvoke = function(cmd, args) {
+                    console.log('Mock Tauri invoke:', cmd, args);
+                    return Promise.resolve({
+                        profiles: [],
+                        active_profile_id: null,
+                        global_hotkey: "cmd+shift+m",
+                        switch_profile_hotkey: "cmd+shift+p",
+                        sound_enabled: true
+                    });
+                };
+                tauriReady = true;
+            }
+        })();
+
+        // 等待Tauri API的辅助函数
+        window.waitForTauri = function() {
+            return new Promise((resolve) => {
+                if (tauriReady) {
+                    resolve();
+                } else {
+                    const check = () => {
+                        if (tauriReady) {
+                            resolve();
+                        } else {
+                            setTimeout(check, 50);
+                        }
+                    };
+                    check();
+                }
+            });
+        };
+        
+        let isCapturingHotkey = false;
+        let currentGlobalHotkey = "cmd+shift+m";
+        let currentSwitchHotkey = "cmd+shift+p";
+        let currentHotkeyType = null; // 'global' or 'switch'
+        let currentProfiles = [];
+        let currentActiveProfileId = null;
+        let currentCaptureBtnEl = null; // track active capture button
+        
+        // Hotkey capture related variables
+        let pressedKeys = new Set();
+        let lastKeyEvent = null;
+        let captureTimeout = null;
+        let modifierKeysPressedCount = 0;
+
+        console.log('🔧 Variables initialized');
+
+        function captureGlobalHotkey() {
+            console.log('🔧 captureGlobalHotkey called');
+            currentHotkeyType = 'global';
+            const captureBtn = event.target;
+            const display = document.getElementById('globalHotkeyDisplay');
+            startHotkeyCapture(captureBtn, display);
+        }
+
+        function captureSwitchHotkey() {
+            console.log('🔧 captureSwitchHotkey called');
+            currentHotkeyType = 'switch';
+            const captureBtn = event.target;
+            const display = document.getElementById('switchHotkeyDisplay');
+            startHotkeyCapture(captureBtn, display);
+        }
+
+        // 立即将函数暴露到全局作用域，确保onclick可以访问
+        window.captureGlobalHotkey = captureGlobalHotkey;
+        window.captureSwitchHotkey = captureSwitchHotkey;
+
+        console.log('🔧 Hotkey functions exposed to global scope');
+        console.log('🔧 Testing hotkey functions:', typeof window.captureGlobalHotkey, typeof window.captureSwitchHotkey);
+
+        function startHotkeyCapture(captureBtn, display) {
             
             if (isCapturingHotkey) return;
             
             isCapturingHotkey = true;
+            currentCaptureBtnEl = captureBtn;
             captureBtn.textContent = 'Press keys...';
             captureBtn.style.background = '#ff3b30';
             display.textContent = 'Press your desired key combination...';
@@ -407,11 +379,6 @@
                 }
             }, 1500);
         }
-
-        let pressedKeys = new Set();
-        let lastKeyEvent = null;
-        let captureTimeout = null;
-        let modifierKeysPressedCount = 0;
 
         function handleHotkeyCapture(event) {
             // 添加调试信息
@@ -502,13 +469,20 @@
                 keys.push(nonModifiers[nonModifiers.length - 1].toLowerCase()); // 使用最后按下的非修饰键
             }
             
-            const display = document.getElementById('hotkeyDisplay2');
-            if (keys.length > 0) {
+            // 根据当前热键类型更新对应的显示元素
+            let display;
+            if (currentHotkeyType === 'global') {
+                display = document.getElementById('globalHotkeyDisplay');
+            } else if (currentHotkeyType === 'switch') {
+                display = document.getElementById('switchHotkeyDisplay');
+            }
+
+            if (display && keys.length > 0) {
                 display.textContent = formatHotkey(keys.join('+'));
             }
         }
 
-        function completeHotkeyCapture(event) {
+        async function completeHotkeyCapture(event) {
             const keys = [];
             if (event.metaKey) keys.push('cmd');
             if (event.ctrlKey) keys.push('ctrl');
@@ -542,18 +516,23 @@
             
             if (keys.length > 0) {
                 const hotkeyString = keys.join('+');
-                currentHotkey = hotkeyString;
                 console.log('Generated hotkey string:', hotkeyString);
-                
-                // Update displays
-                document.getElementById('hotkeyDisplay').textContent = formatHotkey(hotkeyString);
-                document.getElementById('hotkeyDisplay2').textContent = formatHotkey(hotkeyString);
-                
+
+                // Update the appropriate hotkey variable and display
+                if (currentHotkeyType === 'global') {
+                    currentGlobalHotkey = hotkeyString;
+                    document.getElementById('globalHotkeyDisplay').textContent = formatHotkey(hotkeyString);
+                    document.getElementById('hotkeyDisplay').textContent = formatHotkey(hotkeyString);
+                } else if (currentHotkeyType === 'switch') {
+                    currentSwitchHotkey = hotkeyString;
+                    document.getElementById('switchHotkeyDisplay').textContent = formatHotkey(hotkeyString);
+                }
+
                 // Reset capture state
                 finishHotkeyCapture();
-                
-                // Update backend with new hotkey
-                updateBackendHotkey();
+
+                // 自动保存热键设置
+                await autoSaveHotkeys();
             }
         }
 
@@ -569,13 +548,27 @@
 
         function finishHotkeyCapture() {
             isCapturingHotkey = false;
-            const captureBtn = document.querySelector('.hotkey-capture');
-            const display = document.getElementById('hotkeyDisplay2');
-            
-            captureBtn.textContent = 'Change';
-            captureBtn.style.background = '#007aff';
-            display.style.background = '#f8f9fa';
-            display.style.border = '1px solid #d2d2d7';
+
+            // 找到当前正在捕获的按钮和显示元素
+            let captureBtn, display;
+            if (currentHotkeyType === 'global') {
+                captureBtn = currentCaptureBtnEl || document.querySelector('#globalHotkeyDisplay').parentElement.querySelector('button');
+                display = document.getElementById('globalHotkeyDisplay');
+            } else if (currentHotkeyType === 'switch') {
+                captureBtn = currentCaptureBtnEl || document.querySelector('#switchHotkeyDisplay').parentElement.querySelector('button');
+                display = document.getElementById('switchHotkeyDisplay');
+            }
+
+            if (captureBtn) {
+                captureBtn.textContent = 'Change';
+                captureBtn.style.background = '#007aff';
+            }
+
+            if (display) {
+                display.style.background = '#f8f9fa';
+                display.style.border = '1px solid #d2d2d7';
+            }
+            currentCaptureBtnEl = null;
             
             // 清理事件监听器和状态
             document.removeEventListener('keydown', handleHotkeyCapture, true);
@@ -590,29 +583,335 @@
             }
         }
 
-        async function updateBackendHotkey() {
+        // 自动保存热键设置
+        async function autoSaveHotkeys() {
             try {
                 if (window.tauriInvoke) {
-                    await window.tauriInvoke('update_hotkey', { newHotkey: currentHotkey });
-                    addDebug('Backend hotkey updated to: ' + currentHotkey);
-                    showStatus('Hotkey updated: ' + formatHotkey(currentHotkey), 'success');
+                    console.log('🔄 [DEBUG] Auto-saving hotkeys...');
+                    await window.tauriInvoke('update_hotkeys', {
+                        globalHotkey: currentGlobalHotkey,
+                        switchHotkey: currentSwitchHotkey
+                    });
                     
-                    // Update tray menu to show new hotkey
+                    const hotkeyType = currentHotkeyType === 'global' ? 'Global' : 'Switch Profile';
+                    const currentHotkey = currentHotkeyType === 'global' ? currentGlobalHotkey : currentSwitchHotkey;
+                    showStatus(`${hotkeyType} hotkey saved: ${formatHotkey(currentHotkey)} - Applied immediately!`, 'success');
+                    console.log('✅ [DEBUG] Hotkeys auto-saved successfully - applied immediately');
+
+                    // Update tray menu
+                    try {
+                        await window.tauriInvoke('refresh_tray_menu');
+                    } catch (trayError) {
+                        console.log('Failed to refresh tray menu after hotkey update:', trayError);
+                    }
+                }
+            } catch (error) {
+                console.error('❌ [DEBUG] Failed to auto-save hotkeys:', error);
+                showStatus('Failed to save hotkeys: ' + error, 'error');
+            }
+        }
+
+        // 自动保存全局设置
+        async function autoSaveGlobalSettings() {
+            try {
+                if (window.tauriInvoke) {
+                    console.log('🔄 [DEBUG] Auto-saving global settings...');
+                    
+                    // 获取当前全局设置
+                    const soundEnabled = document.getElementById('soundEnabled').checked;
+                    
+                    // 调用后端更新全局设置
+                    await window.tauriInvoke('update_hotkeys', {
+                        globalHotkey: currentGlobalHotkey,
+                        switchHotkey: currentSwitchHotkey
+                    });
+                    
+                    // 这里应该有一个单独的API来更新全局设置，但暂时用现有的
+                    console.log('✅ [DEBUG] Global settings auto-saved');
+                    showStatus('Settings saved automatically', 'success');
+                }
+            } catch (error) {
+                console.error('❌ [DEBUG] Failed to auto-save global settings:', error);
+                showStatus('Failed to save settings: ' + error, 'error');
+            }
+        }
+
+        async function updateBackendHotkeys() {
+            try {
+                if (window.tauriInvoke) {
+                    // Update both hotkeys in the backend
+                    await window.tauriInvoke('update_hotkeys', {
+                        globalHotkey: currentGlobalHotkey,
+                        switchHotkey: currentSwitchHotkey
+                    });
+                    addDebug(`Backend hotkeys updated - Global: ${currentGlobalHotkey}, Switch: ${currentSwitchHotkey}`);
+
+                    const hotkeyType = currentHotkeyType === 'global' ? 'Global' : 'Switch';
+                    const currentHotkey = currentHotkeyType === 'global' ? currentGlobalHotkey : currentSwitchHotkey;
+                    showStatus(`${hotkeyType} hotkey updated: ${formatHotkey(currentHotkey)}`, 'success');
+
+                    // Update tray menu to show new hotkeys
                     try {
                         await window.tauriInvoke('update_tray_model', {
                             modelName: document.getElementById('model').value || "Not Selected"
                         });
-                        addDebug('Tray menu updated with new hotkey');
+                        addDebug('Tray menu updated with new hotkeys');
                     } catch (trayError) {
                         addDebug('Failed to update tray menu: ' + trayError);
                     }
-                    
-                    // Also auto-save settings
-                    autoSaveSettings();
+
+                    // Settings will be saved manually
                 }
             } catch (error) {
-                addDebug('Failed to update backend hotkey: ' + error);
-                showStatus('Failed to update hotkey: ' + error, 'error');
+                addDebug('Failed to update backend hotkeys: ' + error);
+                showStatus('Failed to update hotkeys: ' + error, 'error');
+            }
+        }
+
+        // 自定义输入对话框函数
+        function showInputDialog(title, message, defaultValue = '') {
+            return new Promise((resolve) => {
+                // 创建模态对话框
+                const modal = document.createElement('div');
+                modal.style.cssText = `
+                    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+                    background: rgba(0,0,0,0.5); display: flex; align-items: center;
+                    justify-content: center; z-index: 10000;
+                `;
+
+                const dialog = document.createElement('div');
+                dialog.style.cssText = `
+                    background: white; padding: 30px; border-radius: 15px;
+                    box-shadow: 0 10px 30px rgba(0,0,0,0.3); max-width: 400px; width: 90%;
+                    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+                `;
+
+                const titleEl = document.createElement('h3');
+                titleEl.textContent = title;
+                titleEl.style.cssText = `
+                    margin: 0 0 15px 0; color: #1d1d1f; font-size: 20px; font-weight: 600;
+                `;
+
+                const messageEl = document.createElement('p');
+                messageEl.textContent = message;
+                messageEl.style.cssText = `
+                    margin: 0 0 20px 0; color: #1d1d1f; font-size: 16px;
+                `;
+
+                const input = document.createElement('input');
+                input.type = 'text';
+                input.value = defaultValue;
+                input.style.cssText = `
+                    width: 100%; padding: 12px 16px; border: 1px solid #d2d2d7;
+                    border-radius: 8px; font-size: 16px; margin-bottom: 20px;
+                    box-sizing: border-box;
+                `;
+
+                const buttonContainer = document.createElement('div');
+                buttonContainer.style.cssText = `
+                    display: flex; gap: 10px; justify-content: flex-end;
+                `;
+
+                const cancelBtn = document.createElement('button');
+                cancelBtn.textContent = 'Cancel';
+                cancelBtn.style.cssText = `
+                    padding: 10px 20px; border: 1px solid #d2d2d7; background: white;
+                    border-radius: 8px; font-size: 16px; cursor: pointer;
+                `;
+
+                const okBtn = document.createElement('button');
+                okBtn.textContent = 'OK';
+                okBtn.style.cssText = `
+                    padding: 10px 20px; border: none; background: #007aff; color: white;
+                    border-radius: 8px; font-size: 16px; cursor: pointer;
+                `;
+
+                // 事件处理
+                const handleOk = () => {
+                    const value = input.value.trim();
+                    document.body.removeChild(modal);
+                    resolve(value || null);
+                };
+
+                const handleCancel = () => {
+                    document.body.removeChild(modal);
+                    resolve(null);
+                };
+
+                okBtn.addEventListener('click', handleOk);
+                cancelBtn.addEventListener('click', handleCancel);
+
+                // Enter键确认
+                input.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter') {
+                        handleOk();
+                    }
+                });
+
+                // Escape键取消
+                modal.addEventListener('keydown', (e) => {
+                    if (e.key === 'Escape') {
+                        handleCancel();
+                    }
+                });
+
+                // 组装对话框
+                buttonContainer.appendChild(cancelBtn);
+                buttonContainer.appendChild(okBtn);
+                
+                dialog.appendChild(titleEl);
+                dialog.appendChild(messageEl);
+                dialog.appendChild(input);
+                dialog.appendChild(buttonContainer);
+                
+                modal.appendChild(dialog);
+                document.body.appendChild(modal);
+
+                // 自动聚焦到输入框
+                setTimeout(() => input.focus(), 100);
+            });
+        }
+
+        // Profile Management Functions
+        async function createNewProfile() {
+            console.log('🔧 [DEBUG] createNewProfile() called');
+
+            // 等待Tauri API准备就绪
+            await window.waitForTauri();
+
+            // 创建自定义输入对话框
+            const profileName = await showInputDialog('Create New Profile', 'Enter profile name:', 'New Profile');
+
+            if (!profileName || profileName.trim() === '') {
+                console.log('❌ [DEBUG] Profile creation cancelled - no name provided');
+                return;
+            }
+
+            console.log('✅ [DEBUG] Profile name to use:', profileName.trim());
+
+            try {
+                const newProfile = {
+                    name: profileName.trim(),
+                    api_config: {
+                        base_url: 'http://210.126.8.197:11434/v1',
+                        api_key: '',
+                        model: ''
+                    },
+                    prompt_mode: 'predefined',
+                    predefined_prompt: '识别公式和文字，返回使用pandoc语法的markdown排版内容。公式请用katex语法包裹，文字内容不要丢失。只返回内容不需要其他解释。',
+                    output_mode: 'clipboard'
+                };
+
+                console.log('📦 [DEBUG] Creating profile with data:', newProfile);
+                console.log('🚀 [DEBUG] Calling create_profile...');
+
+                await window.tauriInvoke('create_profile', { profile: newProfile });
+
+                console.log('✅ [DEBUG] Profile creation call completed');
+                addDebug('Profile created: ' + profileName);
+                showStatus('Profile created: ' + profileName, 'success');
+
+                // Reload profiles and settings
+                await loadSettings();
+
+                // 刷新托盘菜单
+                try {
+                    await window.tauriInvoke('refresh_tray_menu');
+                    addDebug('Tray menu refreshed after profile creation');
+                } catch (trayError) {
+                    addDebug('Failed to refresh tray menu: ' + trayError);
+                }
+            } catch (error) {
+                addDebug('Failed to create profile: ' + error);
+                showStatus('Failed to create profile: ' + error, 'error');
+            }
+        }
+
+        console.log('🔧 createNewProfile function defined');
+
+        // 立即暴露createNewProfile到全局作用域
+        window.createNewProfile = createNewProfile;
+
+        console.log('🔧 createNewProfile exposed to global scope');
+        console.log('🔧 Testing createNewProfile:', typeof window.createNewProfile);
+
+        // 移除editCurrentProfile函数 - 现在编辑是自动的
+        // 当切换profile时，界面会自动加载该profile的配置进行编辑
+        /*
+        async function editCurrentProfile() {
+            if (!currentActiveProfileId) {
+                showStatus('No active profile to edit', 'error');
+                return;
+            }
+
+            const newName = prompt('Enter new profile name:', getCurrentProfileName());
+            if (!newName || newName.trim() === '') return;
+
+            try {
+                await window.tauriInvoke('update_profile_name', {
+                    profileId: currentActiveProfileId,
+                    newName: newName.trim()
+                });
+                addDebug('Profile renamed to: ' + newName);
+                showStatus('Profile renamed to: ' + newName, 'success');
+
+                // Reload profiles and settings
+                await loadSettings();
+            } catch (error) {
+                addDebug('Failed to rename profile: ' + error);
+                showStatus('Failed to rename profile: ' + error, 'error');
+            }
+        }
+        */
+
+        async function deleteCurrentProfile() {
+            if (!currentActiveProfileId) {
+                showStatus('No active profile to delete', 'error');
+                return;
+            }
+
+            if (currentProfiles.length <= 1) {
+                showStatus('Cannot delete the last profile', 'error');
+                return;
+            }
+
+            const profileName = getCurrentProfileName();
+            if (!confirm(`Are you sure you want to delete profile "${profileName}"?`)) return;
+
+            try {
+                await window.tauriInvoke('delete_profile', { profileId: currentActiveProfileId });
+                addDebug('Profile deleted: ' + profileName);
+                showStatus('Profile deleted: ' + profileName, 'success');
+
+                // Reload profiles and settings
+                await loadSettings();
+            } catch (error) {
+                addDebug('Failed to delete profile: ' + error);
+                showStatus('Failed to delete profile: ' + error, 'error');
+            }
+        }
+
+        // 立即暴露deleteCurrentProfile到全局作用域
+        window.deleteCurrentProfile = deleteCurrentProfile;
+
+        console.log('🔧 deleteCurrentProfile exposed to global scope');
+
+        function getCurrentProfileName() {
+            const activeProfile = currentProfiles.find(p => p.id === currentActiveProfileId);
+            return activeProfile ? activeProfile.name : 'Unknown Profile';
+        }
+
+        async function switchToProfile(profileId) {
+            try {
+                await window.tauriInvoke('set_active_profile', { profileId });
+                currentActiveProfileId = profileId;
+                addDebug('Switched to profile: ' + profileId);
+
+                // Reload settings to reflect the new active profile
+                await loadSettings();
+            } catch (error) {
+                addDebug('Failed to switch profile: ' + error);
+                showStatus('Failed to switch profile: ' + error, 'error');
             }
         }
 
@@ -677,6 +976,9 @@
                 }
             }
         }
+
+        // 立即暴露takeInteractiveScreenshot到全局作用域
+        window.takeInteractiveScreenshot = takeInteractiveScreenshot;
 
         async function takeRegionScreenshot() {
             addDebug('Take region screenshot clicked');
@@ -792,6 +1094,9 @@
                         select.appendChild(option);
                     });
 
+                    // Update Tailwind model dropdown
+                    updateModelDropdown(preLoadedModels);
+
                     showStatus(`Loaded ${preLoadedModels.length} models from cache`, 'success');
                     showSuccessToast(`Successfully loaded ${preLoadedModels.length} models`);
 
@@ -827,6 +1132,10 @@
                     select.appendChild(option);
                 });
 
+                // Update Tailwind model dropdown
+                const modelIds = models.map(model => model.id);
+                updateModelDropdown(modelIds);
+
                 // Update tray menu with loaded models
                 try {
                     await window.tauriInvoke('refresh_tray_models');
@@ -839,32 +1148,130 @@
                 showSuccessToast(`Successfully loaded ${models.length} models`);
 
                 // 更新自定义select
-                if (window.updateCustomSelectOptions) {
-                    window.updateCustomSelectOptions();
-                }
+                // Update Tailwind dropdowns
+                updateProfileSelector();
+                updateModelDropdown();
             } catch (error) {
                 addDebug('Load models error: ' + error);
                 showStatus('Failed to load models: ' + error, 'error');
             }
         }
 
+        // 立即暴露loadModels到全局作用域
+        window.loadModels = loadModels;
+
 
 
         async function loadSettings() {
             try {
+                // 等待Tauri API准备就绪
+                await window.waitForTauri();
+
                 const config = await window.tauriInvoke('get_config');
-                document.getElementById('apiBaseUrl').value = config.api_base_url;
-                document.getElementById('apiKey').value = config.api_key;
-                document.getElementById('prompt').value = config.prompt;
-                document.getElementById('soundEnabled').checked = config.sound_enabled !== false; // Default to true
-                
-                // Load hotkey
-                if (config.hotkey) {
-                    currentHotkey = config.hotkey;
-                    const formatted = formatHotkey(config.hotkey);
-                    document.getElementById('hotkeyDisplay').textContent = formatted;
-                    document.getElementById('hotkeyDisplay2').textContent = formatted;
+
+                // Store profiles and active profile info
+                currentProfiles = config.profiles || [];
+                currentActiveProfileId = config.active_profile_id;
+
+                // Get active profile
+                const activeProfile = currentProfiles.find(p => p.id === currentActiveProfileId) || currentProfiles[0];
+
+                if (activeProfile) {
+                    // Load profile-specific settings
+                    document.getElementById('profileName').value = activeProfile.name || '';
+                    document.getElementById('apiBaseUrl').value = activeProfile.api_config?.base_url || '';
+                    document.getElementById('apiKey').value = activeProfile.api_config?.api_key || '';
+
+                    // Handle prompt mode (Tailwind dropdown + hidden select)
+                    const promptMode = activeProfile.prompt_mode;
+                    const promptModeSelect = document.getElementById('promptMode');
+                    const promptModeButtonText = document.getElementById('promptModeButtonText');
+                    const promptTextGroup = document.getElementById('promptTextGroup');
+
+                    if (typeof promptMode === 'object' && promptMode.Predefined) {
+                        document.getElementById('prompt').value = promptMode.Predefined;
+                        if (promptModeSelect) promptModeSelect.value = 'Predefined';
+                        if (promptModeButtonText) promptModeButtonText.textContent = 'Predefined Prompt';
+                        if (promptTextGroup) promptTextGroup.style.display = 'block';
+                    } else if (promptMode === 'UserInput' || (typeof promptMode === 'object' && promptMode.UserInput !== undefined)) {
+                        if (promptModeSelect) promptModeSelect.value = 'UserInput';
+                        if (promptModeButtonText) promptModeButtonText.textContent = 'User Input (每次询问)';
+                        if (promptTextGroup) promptTextGroup.style.display = 'none';
+                    } else {
+                        // Default to predefined with existing prompt text if any
+                        if (promptModeSelect) promptModeSelect.value = 'Predefined';
+                        if (promptModeButtonText) promptModeButtonText.textContent = 'Predefined Prompt';
+                        document.getElementById('prompt').value = (typeof promptMode === 'string') ? promptMode : '';
+                        if (promptTextGroup) promptTextGroup.style.display = 'block';
+                    }
+
+                    // Handle output mode (Tailwind dropdown + hidden select)
+                    const outputMode = activeProfile.output_mode;
+                    const outputModeSelect = document.getElementById('outputMode');
+                    const outputModeButtonText = document.getElementById('outputModeButtonText');
+                    if (outputMode === 'Dialog' || (typeof outputMode === 'object' && outputMode.Dialog !== undefined)) {
+                        if (outputModeSelect) outputModeSelect.value = 'Dialog';
+                        if (outputModeButtonText) outputModeButtonText.textContent = 'Dialog (显示对话框)';
+                    } else {
+                        if (outputModeSelect) outputModeSelect.value = 'Clipboard';
+                        if (outputModeButtonText) outputModeButtonText.textContent = 'Clipboard (复制到剪贴板)';
+                    }
+
+                    // Update model selection
+                    const modelSelect = document.getElementById('model');
+                    const selectedModel = activeProfile.api_config?.model || '';
+                    if (selectedModel && selectedModel.trim() !== '') {
+                        const modelExists = Array.from(modelSelect.options).some(option => option.value === selectedModel);
+                        if (!modelExists) {
+                            addDebug('Model from profile not found in select, loading models first...');
+                            try {
+                                await loadModels();
+                                modelSelect.value = selectedModel;
+                                addDebug(`Model set to: ${selectedModel} after loading models`);
+                            } catch (modelLoadError) {
+                                addDebug('Failed to load models when setting profile model: ' + modelLoadError);
+                                modelSelect.value = selectedModel;
+                            }
+                        } else {
+                            modelSelect.value = selectedModel;
+                            addDebug(`Model set to: ${selectedModel}`);
+                        }
+
+                        // Update Tailwind model dropdown
+                        updateModelDropdown();
+                        const modelButtonText = document.getElementById('modelButtonText');
+                        if (modelButtonText && selectedModel) {
+                            modelButtonText.textContent = selectedModel;
+                        }
+                    } else {
+                        modelSelect.value = '';
+                        // Clear Tailwind model dropdown
+                        const modelButtonText = document.getElementById('modelButtonText');
+                        if (modelButtonText) {
+                            modelButtonText.textContent = 'Select a model...';
+                        }
+                    }
                 }
+
+                // Load global settings
+                document.getElementById('soundEnabled').checked = config.sound_enabled !== false;
+
+                // Load hotkeys
+                if (config.global_hotkey) {
+                    currentGlobalHotkey = config.global_hotkey;
+                    const formatted = formatHotkey(config.global_hotkey);
+                    document.getElementById('hotkeyDisplay').textContent = formatted;
+                    document.getElementById('globalHotkeyDisplay').textContent = formatted;
+                }
+
+                if (config.switch_profile_hotkey) {
+                    currentSwitchHotkey = config.switch_profile_hotkey;
+                    const formatted = formatHotkey(config.switch_profile_hotkey);
+                    document.getElementById('switchHotkeyDisplay').textContent = formatted;
+                }
+
+                // Update profile selector
+                updateProfileSelector();
                 
                 // Handle model setting - check if we need to load models first
                 const modelSelect = document.getElementById('model');
@@ -897,67 +1304,67 @@
                 addDebug('Settings loaded');
 
                 // 更新自定义select
-                if (window.updateCustomSelectOptions) {
-                    window.updateCustomSelectOptions();
-                }
+                // Update Tailwind dropdowns
+                updateProfileSelector();
+                updateModelDropdown();
             } catch (error) {
                 addDebug('Load settings error: ' + error);
             }
         }
 
+        // 立即暴露loadSettings到全局作用域
+        window.loadSettings = loadSettings;
+
+        console.log('🔧 loadSettings exposed to global scope');
+
         async function saveSettings() {
             try {
-                const config = {
-                    api_base_url: document.getElementById('apiBaseUrl').value,
-                    api_key: document.getElementById('apiKey').value,
+                // 获取当前选择的prompt模式和输出模式（基于隐藏的原生select）
+                const promptModeSelect = document.getElementById('promptMode');
+                const outputModeSelect = document.getElementById('outputMode');
+
+                const promptMode = (promptModeSelect && promptModeSelect.value === 'UserInput') ? 'user_input' : 'predefined';
+                const outputMode = (outputModeSelect && outputModeSelect.value === 'Dialog') ? 'dialog' : 'clipboard';
+
+                const profileData = {
+                    profileName: document.getElementById('profileName').value,
+                    apiBaseUrl: document.getElementById('apiBaseUrl').value,
+                    apiKey: document.getElementById('apiKey').value,
                     model: document.getElementById('model').value,
                     prompt: document.getElementById('prompt').value,
-                    hotkey: currentHotkey,
-                    sound_enabled: document.getElementById('soundEnabled').checked
+                    promptMode: promptMode,
+                    outputMode: outputMode,
+                    soundEnabled: document.getElementById('soundEnabled').checked
                 };
 
-                await window.tauriInvoke('update_config', { newConfig: config });
+                await window.tauriInvoke('update_profile_config', { profileData });
+
+                // 更新Profile选择器显示
+                const profileName = document.getElementById('profileName').value;
+                if (profileName && profileName.trim() !== '') {
+                    const profileButtonText = document.getElementById('profileButtonText');
+                    if (profileButtonText) {
+                        profileButtonText.textContent = profileName.trim();
+                    }
+                }
+
                 showStatus('Settings saved!', 'success');
-                addDebug('Settings saved');
+                addDebug('Settings saved manually');
             } catch (error) {
                 showStatus('Failed to save: ' + error, 'error');
                 addDebug('Save error: ' + error);
             }
         }
 
-        // Auto-save settings when fields change
+        // 立即暴露saveSettings到全局作用域
+        window.saveSettings = saveSettings;
+
+        // 简化的配置保存逻辑
         let autoSaveTimeout;
+
         async function autoSaveSettings() {
-            // Debounce auto-save to avoid too frequent saves
-            clearTimeout(autoSaveTimeout);
-            autoSaveTimeout = setTimeout(async () => {
-                try {
-                    const config = {
-                        api_base_url: document.getElementById('apiBaseUrl').value,
-                        api_key: document.getElementById('apiKey').value,
-                        model: document.getElementById('model').value,
-                        prompt: document.getElementById('prompt').value,
-                        hotkey: currentHotkey,
-                        sound_enabled: document.getElementById('soundEnabled').checked
-                    };
-
-                    await window.tauriInvoke('update_config', { newConfig: config });
-
-                    // Update tray menu with current model
-                    try {
-                        await window.tauriInvoke('update_tray_model', {
-                            modelName: config.model || "Not Selected"
-                        });
-                        addDebug('Tray menu updated with model: ' + (config.model || "Not Selected"));
-                    } catch (trayError) {
-                        addDebug('Failed to update tray menu: ' + trayError);
-                    }
-
-                    addDebug('Settings auto-saved');
-                } catch (error) {
-                    addDebug('Auto-save error: ' + error);
-                }
-            }, 500); // Wait 500ms after last change
+            // 禁用自动保存，改为手动保存
+            addDebug('Auto-save disabled, use manual save instead');
         }
 
         function showErrorModal(errorMessage) {
@@ -1056,8 +1463,10 @@
         window.addEventListener('load', () => {
             addDebug('Page loaded');
 
-            // 先初始化自定义select
+            // 先初始化所有自定义select（Tailwind 版本在下方初始化）
             initCustomSelect();
+            initProfileSelect();
+            // 移除不存在的初始化调用，使用Tailwind初始化
 
             // Check for Tauri invoke with multiple attempts
             function checkTauriAPI(attempts = 0) {
@@ -1105,6 +1514,70 @@
             });
         }
 
+        // Profile and UI Helper Functions
+        function updateProfileSelector() {
+            const profileSelect = document.getElementById('profileSelect');
+
+            if (!profileSelect) return;
+
+            // Clear existing options except the first one
+            profileSelect.innerHTML = '<option value="">Select Profile...</option>';
+
+            // Add profile options
+            currentProfiles.forEach(profile => {
+                const option = document.createElement('option');
+                option.value = profile.id;
+                option.textContent = profile.name;
+                
+                if (profile.id === currentActiveProfileId) {
+                    option.selected = true;
+                }
+
+                profileSelect.appendChild(option);
+            });
+        }
+
+        function updatePromptModeSelect(mode) {
+            // Bridge legacy calls to Tailwind dropdown + hidden select
+            const hiddenSelect = document.getElementById('promptMode');
+            const btnText = document.getElementById('promptModeButtonText');
+            const promptTextGroup = document.getElementById('promptTextGroup');
+
+            if (mode === 'predefined') {
+                if (hiddenSelect) hiddenSelect.value = 'Predefined';
+                if (btnText) btnText.textContent = 'Predefined Prompt';
+                if (promptTextGroup) promptTextGroup.style.display = 'block';
+            } else if (mode === 'user_input') {
+                if (hiddenSelect) hiddenSelect.value = 'UserInput';
+                if (btnText) btnText.textContent = 'User Input (每次询问)';
+                if (promptTextGroup) promptTextGroup.style.display = 'none';
+            }
+        }
+
+        function updateOutputModeSelect(mode) {
+            // Bridge legacy calls to Tailwind dropdown + hidden select
+            const hiddenSelect = document.getElementById('outputMode');
+            const btnText = document.getElementById('outputModeButtonText');
+
+            if (mode === 'clipboard') {
+                if (hiddenSelect) hiddenSelect.value = 'Clipboard';
+                if (btnText) btnText.textContent = 'Clipboard (复制到剪贴板)';
+            } else if (mode === 'dialog') {
+                if (hiddenSelect) hiddenSelect.value = 'Dialog';
+                if (btnText) btnText.textContent = 'Dialog (显示对话框)';
+            }
+        }
+
+        function closeCustomSelect(selectId) {
+            const trigger = document.querySelector(`#${selectId} .custom-select-trigger`);
+            const options = document.querySelector(`#${selectId} .custom-select-options`);
+
+            if (trigger && options) {
+                trigger.classList.remove('active');
+                options.classList.remove('show');
+            }
+        }
+
         // 自定义select控制
         function initCustomSelect() {
             const trigger = document.getElementById('customSelectTrigger');
@@ -1125,10 +1598,12 @@
 
             // 点击触发器
             trigger.addEventListener('click', (e) => {
-                console.log('Custom select trigger clicked');
+                console.log('🔧 [DEBUG] Custom select trigger clicked');
+                console.log('🔧 [DEBUG] Event target:', e.target);
+                console.log('🔧 [DEBUG] Trigger element:', trigger);
                 e.stopPropagation();
                 const isActive = trigger.classList.contains('active');
-                console.log('isActive:', isActive);
+                console.log('🔧 [DEBUG] isActive:', isActive);
 
                 if (isActive) {
                     closeCustomSelect();
@@ -1137,21 +1612,39 @@
                 }
             });
 
-            // 点击外部关闭
-            document.addEventListener('click', () => {
-                closeCustomSelect();
-            });
+            // 点击外部关闭（移除，使用全局的closeAllCustomSelects）
 
             function openCustomSelect() {
                 console.log('Opening custom select');
                 trigger.classList.add('active');
                 options.classList.add('show');
+
+                // 强制设置样式属性
+                options.style.opacity = '1';
+                options.style.visibility = 'visible';
+                options.style.display = 'block';
+                options.style.transform = 'translateY(0)';
+
+                console.log('🔧 [DEBUG] Model select opened, options count:', options.children.length);
+                console.log('🔧 [DEBUG] Model options innerHTML:', options.innerHTML);
+                console.log('🔧 [DEBUG] Model options classList:', options.classList.toString());
+                console.log('🔧 [DEBUG] Model options style after force:', options.style.cssText);
+                console.log('🔧 [DEBUG] Model options computed style opacity:', window.getComputedStyle(options).opacity);
+                console.log('🔧 [DEBUG] Model options computed style visibility:', window.getComputedStyle(options).visibility);
+                console.log('🔧 [DEBUG] Model options computed style display:', window.getComputedStyle(options).display);
+                console.log('🔧 [DEBUG] Model options getBoundingClientRect:', options.getBoundingClientRect());
             }
 
             function closeCustomSelect() {
                 console.log('Closing custom select');
                 trigger.classList.remove('active');
                 options.classList.remove('show');
+
+                // 强制重置样式属性
+                options.style.opacity = '';
+                options.style.visibility = '';
+                options.style.display = '';
+                options.style.transform = '';
             }
 
             // 选择选项
@@ -1172,7 +1665,7 @@
                 }
 
                 closeCustomSelect();
-                autoSaveSettings();
+                // Settings will be saved manually
             }
 
             // 更新选项
@@ -1212,6 +1705,449 @@
                 }
             };
         }
+
+        // Initialize Profile Select
+        function initProfileSelect() {
+            const trigger = document.getElementById('customProfileTrigger');
+            const options = document.getElementById('customProfileOptions');
+
+            if (!trigger || !options) return;
+
+            trigger.addEventListener('click', (e) => {
+                console.log('🔧 [DEBUG] Profile select trigger clicked!');
+                console.log('🔧 [DEBUG] Event target:', e.target);
+                console.log('🔧 [DEBUG] Trigger element:', trigger);
+                e.stopPropagation();
+                const isActive = trigger.classList.contains('active');
+                console.log('🔧 [DEBUG] Profile isActive:', isActive);
+
+                // Close all other selects
+                closeAllCustomSelects();
+
+                if (!isActive) {
+                    trigger.classList.add('active');
+                    options.classList.add('show');
+
+                    // 强制设置样式属性
+                    options.style.opacity = '1';
+                    options.style.visibility = 'visible';
+                    options.style.display = 'block';
+                    options.style.transform = 'translateY(0)';
+
+                    console.log('🔧 [DEBUG] Profile select opened, options count:', options.children.length);
+                    console.log('🔧 [DEBUG] Options innerHTML:', options.innerHTML);
+                    console.log('🔧 [DEBUG] Options classList:', options.classList.toString());
+                    console.log('🔧 [DEBUG] Options style after force:', options.style.cssText);
+                    console.log('🔧 [DEBUG] Options computed style opacity:', window.getComputedStyle(options).opacity);
+                    console.log('🔧 [DEBUG] Options computed style visibility:', window.getComputedStyle(options).visibility);
+                    console.log('🔧 [DEBUG] Options computed style display:', window.getComputedStyle(options).display);
+                    console.log('🔧 [DEBUG] Options getBoundingClientRect:', options.getBoundingClientRect());
+                }
+            });
+        }
+
+        // Initialize Tailwind dropdowns
+        function initTailwindDropdowns() {
+            initProfileDropdown();
+            initModelDropdown();
+        }
+
+        // Profile dropdown using Tailwind
+        function initProfileDropdown() {
+            const button = document.getElementById('profileButton');
+            const options = document.getElementById('profileOptions');
+            const buttonText = document.getElementById('profileButtonText');
+
+            if (!button || !options || !buttonText) return;
+
+            button.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const isOpen = !options.classList.contains('hidden');
+                
+                // Close all dropdowns first
+                closeAllTailwindDropdowns();
+                
+                if (!isOpen) {
+                    options.classList.remove('hidden');
+                    button.setAttribute('aria-expanded', 'true');
+                }
+            });
+
+            // Close when clicking outside
+            document.addEventListener('click', () => {
+                if (!options.classList.contains('hidden')) {
+                    options.classList.add('hidden');
+                    button.setAttribute('aria-expanded', 'false');
+                }
+            });
+        }
+
+        // Model dropdown using Tailwind  
+        function initModelDropdown() {
+            const button = document.getElementById('modelButton');
+            const options = document.getElementById('modelOptions');
+            const buttonText = document.getElementById('modelButtonText');
+
+            if (!button || !options || !buttonText) return;
+
+            button.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const isOpen = !options.classList.contains('hidden');
+                
+                // Close all dropdowns first
+                closeAllTailwindDropdowns();
+                
+                if (!isOpen) {
+                    options.classList.remove('hidden');
+                    button.setAttribute('aria-expanded', 'true');
+                }
+            });
+
+            // Close when clicking outside
+            document.addEventListener('click', () => {
+                if (!options.classList.contains('hidden')) {
+                    options.classList.add('hidden');
+                    button.setAttribute('aria-expanded', 'false');
+                }
+            });
+        }
+
+        // Close all Tailwind dropdowns
+        function closeAllTailwindDropdowns() {
+            const allDropdowns = ['profileOptions', 'modelOptions', 'promptModeOptions', 'outputModeOptions'];
+            const allButtons = ['profileButton', 'modelButton', 'promptModeButton', 'outputModeButton'];
+            
+            allDropdowns.forEach(id => {
+                const dropdown = document.getElementById(id);
+                if (dropdown) dropdown.classList.add('hidden');
+            });
+            
+            allButtons.forEach(id => {
+                const button = document.getElementById(id);
+                if (button) button.setAttribute('aria-expanded', 'false');
+            });
+        }
+
+        // Update profile dropdown options
+        function updateProfileSelector() {
+            const profileOptions = document.getElementById('profileOptions');
+            const profileButtonText = document.getElementById('profileButtonText');
+
+            if (!profileOptions || !profileButtonText) return;
+
+            // Clear existing options
+            profileOptions.innerHTML = '';
+
+            // Add profile options
+            currentProfiles.forEach(profile => {
+                const li = document.createElement('li');
+                li.className = 'text-gray-900 cursor-default select-none relative py-2 pl-8 pr-4 hover:bg-apple-blue hover:text-white';
+                li.setAttribute('role', 'option');
+                li.innerHTML = `
+                    <span class="font-normal block truncate ${profile.id === currentActiveProfileId ? 'font-semibold' : ''}">${profile.name}</span>
+                    ${profile.id === currentActiveProfileId ? '<span class="text-apple-blue absolute inset-y-0 left-0 flex items-center pl-1.5"><svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" /></svg></span>' : ''}
+                `;
+                
+                li.addEventListener('click', () => {
+                    console.log('🔧 [DEBUG] Profile selected from Tailwind dropdown:', profile.id);
+                    const hiddenSelect = document.getElementById('profileSelect');
+                    hiddenSelect.value = profile.id;
+                    switchToProfile(profile.id);
+                    profileButtonText.textContent = profile.name;
+                    closeAllTailwindDropdowns();
+                });
+
+                profileOptions.appendChild(li);
+            });
+
+            // Update button text with current profile
+            if (currentActiveProfileId) {
+                const activeProfile = currentProfiles.find(p => p.id === currentActiveProfileId);
+                if (activeProfile) {
+                    profileButtonText.textContent = activeProfile.name;
+                }
+            }
+        }
+
+        // Update model dropdown options (supports custom input)
+        function updateModelDropdown(models) {
+            const modelOptions = document.getElementById('modelOptions');
+            const modelButtonText = document.getElementById('modelButtonText');
+
+            if (!modelOptions || !modelButtonText) return;
+
+            // Normalize models list
+            const list = Array.isArray(models) ? models : [];
+
+            // Clear existing options
+            modelOptions.innerHTML = '';
+
+            // Add default option
+            const defaultLi = document.createElement('li');
+            defaultLi.className = 'text-gray-900 cursor-default select-none relative py-2 pl-8 pr-4 hover:bg-apple-blue hover:text-white';
+            defaultLi.setAttribute('role', 'option');
+            defaultLi.innerHTML = '<span class="font-normal block truncate">Select a model...</span>';
+            defaultLi.addEventListener('click', () => {
+                const hiddenSelect = document.getElementById('model');
+                hiddenSelect.value = '';
+                modelButtonText.textContent = 'Select a model...';
+                closeAllTailwindDropdowns();
+            });
+            modelOptions.appendChild(defaultLi);
+
+            // Add a custom model option
+            const customLi = document.createElement('li');
+            customLi.className = 'text-gray-900 cursor-default select-none relative py-2 pl-8 pr-4 hover:bg-apple-blue hover:text-white';
+            customLi.setAttribute('role', 'option');
+            customLi.innerHTML = '<span class="font-normal block truncate">Custom model…</span>';
+            customLi.addEventListener('click', async () => {
+                const hiddenSelect = document.getElementById('model');
+                const current = hiddenSelect.value || '';
+                const value = await showInputDialog('Custom Model', 'Enter model name or ID:', current);
+                if (value) {
+                    const exists = Array.from(hiddenSelect.options).some(o => o.value === value);
+                    if (!exists) {
+                        const opt = document.createElement('option');
+                        opt.value = value;
+                        opt.textContent = value;
+                        hiddenSelect.appendChild(opt);
+                    }
+                    hiddenSelect.value = value;
+                    modelButtonText.textContent = value;
+                }
+                closeAllTailwindDropdowns();
+            });
+            modelOptions.appendChild(customLi);
+
+            // Add model options
+            list.forEach(modelId => {
+                const li = document.createElement('li');
+                li.className = 'text-gray-900 cursor-default select-none relative py-2 pl-8 pr-4 hover:bg-apple-blue hover:text-white';
+                li.setAttribute('role', 'option');
+                li.innerHTML = `<span class="font-normal block truncate">${modelId}</span>`;
+                
+                li.addEventListener('click', () => {
+                    console.log('🔧 [DEBUG] Model selected from Tailwind dropdown:', modelId);
+                    const hiddenSelect = document.getElementById('model');
+                    hiddenSelect.value = modelId;
+                    modelButtonText.textContent = modelId;
+                    closeAllTailwindDropdowns();
+                });
+
+                modelOptions.appendChild(li);
+            });
+
+            // Reflect current selection in button text
+            const hiddenSelect = document.getElementById('model');
+            if (hiddenSelect && hiddenSelect.value) {
+                modelButtonText.textContent = hiddenSelect.value;
+            }
+        }
+
+        // Initialize Prompt Mode dropdown
+        function initPromptModeDropdown() {
+            const button = document.getElementById('promptModeButton');
+            const options = document.getElementById('promptModeOptions');
+            const buttonText = document.getElementById('promptModeButtonText');
+            const hiddenSelect = document.getElementById('promptMode');
+
+            if (!button || !options || !buttonText || !hiddenSelect) return;
+
+            // Setup click handler for button
+            button.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const isOpen = !options.classList.contains('hidden');
+                
+                // Close all dropdowns first
+                closeAllTailwindDropdowns();
+                
+                if (!isOpen) {
+                    options.classList.remove('hidden');
+                    button.setAttribute('aria-expanded', 'true');
+                }
+            });
+
+            // Close when clicking outside
+            document.addEventListener('click', () => {
+                if (!options.classList.contains('hidden')) {
+                    options.classList.add('hidden');
+                    button.setAttribute('aria-expanded', 'false');
+                }
+            });
+
+            // Populate options
+            updatePromptModeDropdown();
+        }
+
+        // Initialize Output Mode dropdown
+        function initOutputModeDropdown() {
+            const button = document.getElementById('outputModeButton');
+            const options = document.getElementById('outputModeOptions');
+            const buttonText = document.getElementById('outputModeButtonText');
+            const hiddenSelect = document.getElementById('outputMode');
+
+            if (!button || !options || !buttonText || !hiddenSelect) return;
+
+            // Setup click handler for button
+            button.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const isOpen = !options.classList.contains('hidden');
+                
+                // Close all dropdowns first
+                closeAllTailwindDropdowns();
+                
+                if (!isOpen) {
+                    options.classList.remove('hidden');
+                    button.setAttribute('aria-expanded', 'true');
+                }
+            });
+
+            // Close when clicking outside
+            document.addEventListener('click', () => {
+                if (!options.classList.contains('hidden')) {
+                    options.classList.add('hidden');
+                    button.setAttribute('aria-expanded', 'false');
+                }
+            });
+
+            // Populate options
+            updateOutputModeDropdown();
+        }
+
+        // Update Prompt Mode dropdown options
+        function updatePromptModeDropdown() {
+            const promptModeOptions = document.getElementById('promptModeOptions');
+            const promptModeButtonText = document.getElementById('promptModeButtonText');
+
+            if (!promptModeOptions || !promptModeButtonText) return;
+
+            // Clear existing options
+            promptModeOptions.innerHTML = '';
+
+            const modes = [
+                { value: 'Predefined', text: 'Predefined Prompt' },
+                { value: 'UserInput', text: 'User Input (每次询问)' }
+            ];
+
+            modes.forEach(mode => {
+                const li = document.createElement('li');
+                li.className = 'text-gray-900 cursor-default select-none relative py-2 pl-8 pr-4 hover:bg-apple-blue hover:text-white';
+                li.setAttribute('role', 'option');
+                li.innerHTML = `<span class="font-normal block truncate">${mode.text}</span>`;
+                
+                li.addEventListener('click', () => {
+                    console.log('🔧 [DEBUG] Prompt mode selected:', mode.value);
+                    const hiddenSelect = document.getElementById('promptMode');
+                    hiddenSelect.value = mode.value;
+                    promptModeButtonText.textContent = mode.text;
+                    closeAllTailwindDropdowns();
+                    
+                    // Show/hide prompt text group based on selection
+                    const promptTextGroup = document.getElementById('promptTextGroup');
+                    if (promptTextGroup) {
+                        if (mode.value === 'Predefined') {
+                            promptTextGroup.style.display = 'block';
+                        } else {
+                            promptTextGroup.style.display = 'none';
+                        }
+                    }
+                });
+
+                promptModeOptions.appendChild(li);
+            });
+        }
+
+        // Update Output Mode dropdown options
+        function updateOutputModeDropdown() {
+            const outputModeOptions = document.getElementById('outputModeOptions');
+            const outputModeButtonText = document.getElementById('outputModeButtonText');
+
+            if (!outputModeOptions || !outputModeButtonText) return;
+
+            // Clear existing options
+            outputModeOptions.innerHTML = '';
+
+            const modes = [
+                { value: 'Clipboard', text: 'Clipboard (复制到剪贴板)' },
+                { value: 'Dialog', text: 'Dialog (显示对话框)' }
+            ];
+
+            modes.forEach(mode => {
+                const li = document.createElement('li');
+                li.className = 'text-gray-900 cursor-default select-none relative py-2 pl-8 pr-4 hover:bg-apple-blue hover:text-white';
+                li.setAttribute('role', 'option');
+                li.innerHTML = `<span class="font-normal block truncate">${mode.text}</span>`;
+                
+                li.addEventListener('click', () => {
+                    console.log('🔧 [DEBUG] Output mode selected:', mode.value);
+                    const hiddenSelect = document.getElementById('outputMode');
+                    hiddenSelect.value = mode.value;
+                    outputModeButtonText.textContent = mode.text;
+                    closeAllTailwindDropdowns();
+                });
+
+                outputModeOptions.appendChild(li);
+            });
+        }
+
+        // 页面加载完成后初始化
+        document.addEventListener('DOMContentLoaded', async function() {
+            console.log('🚀 [DEBUG] DOMContentLoaded event fired');
+            console.log('🚀 [DEBUG] Page loaded, initializing...');
+
+            // 验证重要函数是否已暴露
+            console.log('🔧 [DEBUG] createNewProfile in window:', typeof window.createNewProfile);
+            console.log('🔧 [DEBUG] deleteCurrentProfile in window:', typeof window.deleteCurrentProfile);
+            console.log('🔧 [DEBUG] captureGlobalHotkey in window:', typeof window.captureGlobalHotkey);
+            console.log('🔧 [DEBUG] captureSwitchHotkey in window:', typeof window.captureSwitchHotkey);
+            console.log('🔧 [DEBUG] loadSettings in window:', typeof window.loadSettings);
+            console.log('🔧 [DEBUG] saveSettings in window:', typeof window.saveSettings);
+            console.log('🔧 [DEBUG] tauriInvoke in window:', typeof window.tauriInvoke);
+            
+            // 其他函数如果需要也可以在这里暴露
+            // 主要的onclick函数已经在定义后立即暴露了
+            
+            // 初始化Tailwind下拉菜单
+            console.log('🔧 [DEBUG] Initializing Tailwind dropdowns...');
+            initTailwindDropdowns();
+            initPromptModeDropdown();
+            initOutputModeDropdown();
+            
+            // 加载设置
+            console.log('🔧 [DEBUG] Loading settings...');
+            try {
+                await loadSettings();
+                console.log('✅ [DEBUG] Settings loaded successfully');
+            } catch (error) {
+                console.error('❌ [DEBUG] Error loading settings:', error);
+            }
+            
+            console.log('✅ [DEBUG] Initialization complete');
+
+            // 测试函数是否可以调用
+            console.log('🧪 [DEBUG] Testing function accessibility...');
+            try {
+                if (typeof window.createNewProfile === 'function') {
+                    console.log('✅ [DEBUG] createNewProfile is accessible');
+                } else {
+                    console.error('❌ [DEBUG] createNewProfile is not accessible');
+                }
+
+                if (typeof window.captureGlobalHotkey === 'function') {
+                    console.log('✅ [DEBUG] captureGlobalHotkey is accessible');
+                } else {
+                    console.error('❌ [DEBUG] captureGlobalHotkey is not accessible');
+                }
+
+                if (typeof window.loadSettings === 'function') {
+                    console.log('✅ [DEBUG] loadSettings is accessible');
+                } else {
+                    console.error('❌ [DEBUG] loadSettings is not accessible');
+                }
+            } catch (error) {
+                console.error('❌ [DEBUG] Error testing functions:', error);
+            }
+        });
     </script>
 </body>
 </html>

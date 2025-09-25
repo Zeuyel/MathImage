@@ -1,1 +1,23 @@
 /target
+# Rust/Tauri 构建产物
+src-tauri/target/
+**/bundle/
+*.dmg
+*.app/
+*.zip
+*.tar.gz
+
+# 系统与本地杂项
+.DS_Store
+*.log
+*.bak
+*.backup
+*~
+
+# 本地工作文件与助手缓存
+plan.md
+.claude/
+.cunzhi-memory/
+tauri.conf.json.backup
+.DS_Store
+AGENTS.md
